@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/mental12345/chaosCLI/cmd"
 	"github.com/urfave/cli"
 )
 
@@ -19,6 +20,7 @@ func main() {
 				os.Exit(1)
 			}
 			fmt.Println("Destroy initiated...")
+			cmd.ReadFile()
 			return nil
 		},
 		Commands: []cli.Command{
