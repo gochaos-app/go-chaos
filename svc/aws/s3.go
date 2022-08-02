@@ -1,8 +1,13 @@
 package aws
 
-import "fmt"
+import (
+	"fmt"
 
-func s3(text string, text2 string) {
-	fmt.Println("Function S3 parameter:", text)
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/lambda"
+)
 
+func s3Fn(sess *session.Session, tags []string, chaos string, number int) {
+	svc := lambda.New(sess)
+	fmt.Println(svc, tags, chaos, number)
 }

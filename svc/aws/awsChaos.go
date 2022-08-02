@@ -1,35 +1,38 @@
 package aws
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 )
 
-type fn func(string, string)
+type awsfn func(*session.Session, []string, string, int)
 
 func AmazonChaos(region string, service string, tags []string, chaos string, number int) {
 	//AWS session for each region in the config
-	_, err := session.NewSession(&aws.Config{
+	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(region),
 	})
+	fmt.Printf("%T", sess)
 	if err != nil {
 		log.Println("error", err)
 	}
 
-	awsMap := map[string]fn{
-		"lambda": lambda,
-		"ec2":    ec2,
-		"s3":     s3,
+	awsMap := map[string]awsfn{
+		"lambda": lambdaFn,
+		"ec2":    ec2Fn,
+		"s3":     s3Fn,
 	}
-
-	switch service {
+	awsMap[service](sess, tags, chaos, number)
+	/*switch service {
 	case "lambda":
-		awsMap[service]("hola desde lambda", "service")
+		//string, string, *session.Session, []string, string, int)
+		awsMap[service](sess, tags, chaos, number)
 	case "ec2":
-		awsMap[service]("hola ec2 que show", "hello")
+		awsMap[service](sess, tags, chaos, number)
 	case "s3":
-		awsMap[service]("Hola desde s3", "hello")
-	}
+		awsMap[service](sess, tags, chaos, number)
+	}*/
 }
