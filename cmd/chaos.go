@@ -14,7 +14,7 @@ func ExecuteChaos(cfg *GenConfig) error {
 			aws.AmazonChaos(
 				cfg.Job[i].Region,
 				cfg.Job[i].Service,
-				cfg.Job[i].Chaos.Tags,
+				cfg.Job[i].Chaos.Tag,
 				cfg.Job[i].Chaos.Chaos,
 				cfg.Job[i].Chaos.Count)
 		case "gcp":

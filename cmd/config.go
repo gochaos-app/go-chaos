@@ -15,8 +15,8 @@ type JobConfig struct {
 }
 
 type ChaosConfig struct {
-	Config string   `hcl:"chaos,label"`
-	Tags   []string `hcl:"tags"`
-	Chaos  string   `hcl:"chaos"`
-	Count  int      `hcl:"count"`
+	Config string `hcl:"chaos,label"`
+	Tag    string `hcl:"tag"`
+	Chaos  string `hcl:"chaos"`
+	Count  int    `hcl:"count"`
 }

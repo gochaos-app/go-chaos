@@ -1,38 +1,28 @@
 package aws
 
 import (
-	"fmt"
+	"context"
 	"log"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
 )
 
-type awsfn func(*session.Session, []string, string, int)
+type awsfn func(aws.Config, string, string, int)
 
-func AmazonChaos(region string, service string, tags []string, chaos string, number int) {
+func AmazonChaos(region string, service string, tag string, chaos string, number int) {
 	//AWS session for each region in the config
-	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String(region),
-	})
-	fmt.Printf("%T", sess)
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+
 	if err != nil {
-		log.Println("error", err)
+		log.Fatalln("Unable to load config", err)
 	}
 
 	awsMap := map[string]awsfn{
-		"lambda": lambdaFn,
-		"ec2":    ec2Fn,
-		"s3":     s3Fn,
+		//"lambda": lambdaFn,
+		"ec2": ec2Fn,
+		"s3":  s3Fn,
 	}
-	awsMap[service](sess, tags, chaos, number)
-	/*switch service {
-	case "lambda":
-		//string, string, *session.Session, []string, string, int)
-		awsMap[service](sess, tags, chaos, number)
-	case "ec2":
-		awsMap[service](sess, tags, chaos, number)
-	case "s3":
-		awsMap[service](sess, tags, chaos, number)
-	}*/
+	awsMap[service](cfg, tag, chaos, number)
+
 }

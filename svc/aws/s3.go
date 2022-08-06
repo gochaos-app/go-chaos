@@ -3,11 +3,13 @@ package aws
 import (
 	"fmt"
 
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/lambda"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/lambda"
 )
 
-func s3Fn(sess *session.Session, tags []string, chaos string, number int) {
-	svc := lambda.New(sess)
-	fmt.Println(svc, tags, chaos, number)
+func s3Fn(sess aws.Config, tag string, chaos string, number int) {
+	svc := lambda.NewFromConfig(sess)
+
+	fmt.Println(svc, tag, chaos, number)
+
 }
