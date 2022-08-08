@@ -50,16 +50,16 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 	}
 
 	if len(EC2instances) >= number {
-		log.Println("EC2 Chaos initiated")
+		log.Println("EC2 Chaos permitted...")
 	} else {
 		log.Println("chaos not permitted", len(EC2instances), "instances found", key, ":", value, "review config")
 		return
 	}
 
 	ec2Map := map[string]chaosEC2fn{
-		"terminate": terminateFn,
-		"stop":      stopFn,
-		"reboot":    rebootFn,
+		"terminate": terminateEC2Fn,
+		"stop":      stopEC2Fn,
+		"reboot":    rebootEC2Fn,
 	}
 	if chaos == "random" {
 		rand.Seed(time.Now().UnixNano())
@@ -82,7 +82,7 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 
 }
 
-func rebootFn(instances []string, num2Kill int, session *ec2.Client) {
+func rebootEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	input := &ec2.RebootInstancesInput{
 		InstanceIds: []string{},
@@ -102,7 +102,7 @@ func rebootFn(instances []string, num2Kill int, session *ec2.Client) {
 	}
 }
 
-func stopFn(instances []string, num2Kill int, session *ec2.Client) {
+func stopEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	input := &ec2.StopInstancesInput{
 		InstanceIds: []string{},
@@ -122,7 +122,7 @@ func stopFn(instances []string, num2Kill int, session *ec2.Client) {
 	}
 }
 
-func terminateFn(instances []string, num2Kill int, session *ec2.Client) {
+func terminateEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	input := &ec2.TerminateInstancesInput{
 		InstanceIds: []string{},

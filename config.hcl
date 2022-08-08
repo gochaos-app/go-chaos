@@ -11,11 +11,10 @@ job "aws" "ec2" {
 }
 
 job "aws" "s3" {
-    region = "us-west-1"
     config "chaos" {
-        tag = "SUFFIX:test"
+        tag = "PREFIX:mybucket"
         count = 2
-        chaos = "TERMINATE"
+        chaos = "terminate"
     }
 }
 
