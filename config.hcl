@@ -5,14 +5,14 @@ job "aws" "ec2" {
     region = "us-east-1"
     config "chaos" {
         tag = "Name:test"
-        chaos = "stop"
+        chaos = "terminate"
         count = 2
     }
 }
 
 job "aws" "s3" {
     config "chaos" {
-        tag = "PREFIX:blog"
+        tag = "test:blog"
         count = 20
         chaos = "terminate"
     }

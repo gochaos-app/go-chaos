@@ -48,10 +48,11 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int) {
 			}
 		}
 	default:
-		log.Println("I don't understand")
+		log.Println("Chaos not permitted: Please use PREFIX or SUFFIX as tag key")
+		return
 	}
 	if len(fixList) == 0 {
-		log.Println("Couldn't find a buckets with the characteristics specified in the config file")
+		log.Println("Chaos not permitted: Couldn't find a buckets with the characteristics specified in the config file")
 		return
 	} else {
 		log.Println("S3 Chaos permitted...")

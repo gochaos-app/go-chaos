@@ -2,7 +2,6 @@ package aws
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"math/rand"
 	"strings"
@@ -19,7 +18,7 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 	svc := ec2.NewFromConfig(sess)
 	var key, value string
 	if number == 0 {
-		log.Println("Not going to destroy any EC2")
+		log.Println("Will not destroy any EC2")
 		return
 	}
 	parts := strings.Split(tag, ":")
@@ -38,8 +37,7 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 		},
 	})
 	if err != nil {
-		fmt.Println("Got an error retrieving information about your Amazon EC2 instances:")
-		fmt.Println(err)
+		log.Panicln("Got an error retrieving information about your Amazon EC2 instances:", err)
 		return
 	}
 	var EC2instances []string
@@ -52,7 +50,7 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 	if len(EC2instances) >= number {
 		log.Println("EC2 Chaos permitted...")
 	} else {
-		log.Println("chaos not permitted", len(EC2instances), "instances found", key, ":", value, "review config")
+		log.Println("Chaos not permitted", len(EC2instances), "instances found with", key, value, "Number of instances to destroy is:", number)
 		return
 	}
 
@@ -88,9 +86,7 @@ func rebootEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 		InstanceIds: []string{},
 	}
 
-	if num2Kill != 0 {
-		instances = instances[:num2Kill]
-	}
+	instances = instances[:num2Kill]
 	for _, id := range instances {
 		log.Println(id)
 		input.InstanceIds = append(input.InstanceIds, *aws.String(id))
@@ -98,7 +94,7 @@ func rebootEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	_, err := session.RebootInstances(context.TODO(), input)
 	if err != nil {
-		log.Println("Error deleting instances:", err)
+		log.Panicln("Error deleting instances:", err)
 	}
 }
 
@@ -108,9 +104,7 @@ func stopEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 		InstanceIds: []string{},
 	}
 
-	if num2Kill != 0 {
-		instances = instances[:num2Kill]
-	}
+	instances = instances[:num2Kill]
 	for _, id := range instances {
 		log.Println(id)
 		input.InstanceIds = append(input.InstanceIds, *aws.String(id))
@@ -128,9 +122,7 @@ func terminateEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 		InstanceIds: []string{},
 	}
 
-	if num2Kill != 0 {
-		instances = instances[:num2Kill]
-	}
+	instances = instances[:num2Kill]
 	for _, id := range instances {
 		log.Println(id)
 		input.InstanceIds = append(input.InstanceIds, *aws.String(id))
