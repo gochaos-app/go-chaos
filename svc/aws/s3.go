@@ -79,10 +79,7 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int) {
 
 func terminateS3Fn(list []string, number int, session *s3.Client) {
 	buckets := len(list)
-	if buckets == 0 {
-		log.Println("Can't find any s3 buckets with the specified config")
-		return
-	} else if buckets < number {
+	if buckets < number {
 		log.Println("Out of dimension array, trying to delete", number, "buckets.", buckets, "S3 buckets found")
 		return
 	}

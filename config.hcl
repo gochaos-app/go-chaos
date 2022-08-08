@@ -12,8 +12,8 @@ job "aws" "ec2" {
 
 job "aws" "s3" {
     config "chaos" {
-        tag = "PREFIX:mybucket"
-        count = 2
+        tag = "PREFIX:blog"
+        count = 20
         chaos = "terminate"
     }
 }
