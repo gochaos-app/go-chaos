@@ -112,7 +112,6 @@ func terminateS3Fn(list []string, number int, session *s3.Client) {
 			return
 		}
 	}
-
 }
 
 func deletectnS3Fn(list []string, number int, session *s3.Client) {
