@@ -13,7 +13,7 @@ job "aws" "ec2" {
 job "aws" "lambda" {
     config "chaos" {
         tag = "tag:example"
-        count = 20
+        count = 1
         chaos = "stop"
     }
 }

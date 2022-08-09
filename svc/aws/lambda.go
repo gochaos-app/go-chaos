@@ -58,6 +58,7 @@ func lambdaFn(sess aws.Config, tag string, chaos string, number int) {
 }
 
 func terminateLambdaFn(list []string, number int, session *lambda.Client) {
+	list = list[:number]
 	for _, lambdaARN := range list {
 		input := lambda.DeleteFunctionInput{
 			FunctionName: aws.String(lambdaARN),
@@ -71,6 +72,7 @@ func terminateLambdaFn(list []string, number int, session *lambda.Client) {
 }
 
 func stopLambdaFn(list []string, number int, session *lambda.Client) {
+	list = list[:number]
 	for _, lambdaARN := range list {
 		input := lambda.PutFunctionConcurrencyInput{
 			FunctionName:                 aws.String(lambdaARN),
