@@ -63,7 +63,6 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 }
 
 func rebootEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
-
 	input := &ec2.RebootInstancesInput{
 		InstanceIds: []string{},
 	}
