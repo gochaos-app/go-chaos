@@ -3,9 +3,7 @@ package aws
 import (
 	"context"
 	"log"
-	"math/rand"
 	"strings"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
@@ -54,28 +52,14 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int) {
 	if len(fixList) == 0 {
 		log.Println("Chaos not permitted: Couldn't find a buckets with the characteristics specified in the config file")
 		return
-	} else {
-		log.Println("S3 Chaos permitted...")
 	}
 
 	s3Map := map[string]chaosS3fn{
 		"terminate":      terminateS3Fn,
 		"delete_content": deletectnS3Fn,
 	}
-	if chaos == "random" {
-		rand.Seed(time.Now().UnixNano())
-		randomSelect := rand.Intn(2)
-		switch randomSelect {
-		case 0:
-			log.Println("Terminating S3 buckets")
-			s3Map["stop"](fixList, number, svc)
-		case 1:
-			log.Println("Deleting content on S3 buckets")
-			s3Map["delete_content"](fixList, number, svc)
-		}
-	} else {
-		s3Map[chaos](fixList, number, svc)
-	}
+	s3Map[chaos](fixList, number, svc)
+
 }
 
 func terminateS3Fn(list []string, number int, session *s3.Client) {
@@ -101,6 +85,7 @@ func terminateS3Fn(list []string, number int, session *s3.Client) {
 				return
 			}
 		}
+		log.Println("Deleting bucket:", S3Bucket)
 		input := &s3.DeleteBucketInput{
 			Bucket: aws.String(S3Bucket),
 		}
@@ -132,6 +117,7 @@ func deletectnS3Fn(list []string, number int, session *s3.Client) {
 		objectsArray := results.Contents[0:number]
 
 		for _, item := range objectsArray {
+			log.Println("Deleting object:", item)
 			input_delete := &s3.DeleteObjectInput{
 				Bucket: aws.String(S3Bucket),
 				Key:    aws.String(*item.Key),

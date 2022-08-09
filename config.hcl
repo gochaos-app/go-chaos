@@ -6,15 +6,15 @@ job "aws" "ec2" {
     config "chaos" {
         tag = "Name:test"
         chaos = "terminate"
-        count = 2
+        count = 1
     }
 }
 
-job "aws" "s3" {
+job "aws" "lambda" {
     config "chaos" {
-        tag = "test:blog"
+        tag = "tag:example"
         count = 20
-        chaos = "terminate"
+        chaos = "stop"
     }
 }
 

@@ -3,9 +3,7 @@ package aws
 import (
 	"context"
 	"log"
-	"math/rand"
 	"strings"
-	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -59,24 +57,8 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 		"stop":      stopEC2Fn,
 		"reboot":    rebootEC2Fn,
 	}
-	if chaos == "random" {
-		rand.Seed(time.Now().UnixNano())
 
-		randomSelect := rand.Intn(3) // terminate stop reboot 0 1 2
-		switch randomSelect {
-		case 0:
-			log.Println("Terminating instances... ")
-			ec2Map["terminate"](EC2instances, number, svc)
-		case 1:
-			log.Println("Stopping instances... ")
-			ec2Map["stop"](EC2instances, number, svc)
-		case 2:
-			log.Println("Rebooting instances... ")
-			ec2Map["reboot"](EC2instances, number, svc)
-		}
-	} else {
-		ec2Map[chaos](EC2instances, number, svc)
-	}
+	ec2Map[chaos](EC2instances, number, svc)
 
 }
 
@@ -88,7 +70,7 @@ func rebootEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	instances = instances[:num2Kill]
 	for _, id := range instances {
-		log.Println(id)
+		log.Println("Rebooting instances:", id)
 		input.InstanceIds = append(input.InstanceIds, *aws.String(id))
 	}
 
@@ -106,7 +88,7 @@ func stopEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	instances = instances[:num2Kill]
 	for _, id := range instances {
-		log.Println(id)
+		log.Println("Stopping instances:", id)
 		input.InstanceIds = append(input.InstanceIds, *aws.String(id))
 	}
 
@@ -124,7 +106,7 @@ func terminateEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	instances = instances[:num2Kill]
 	for _, id := range instances {
-		log.Println(id)
+		log.Println("Terminating instance:", id)
 		input.InstanceIds = append(input.InstanceIds, *aws.String(id))
 	}
 
