@@ -75,7 +75,7 @@ func rebootEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	_, err := session.RebootInstances(context.TODO(), input)
 	if err != nil {
-		log.Panicln("Error deleting instances:", err)
+		log.Panicln("Error rebooting instances:", err)
 	}
 }
 
@@ -93,7 +93,7 @@ func stopEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	_, err := session.StopInstances(context.TODO(), input)
 	if err != nil {
-		log.Println("Error deleting instances:", err)
+		log.Println("Error stopping instances:", err)
 	}
 }
 
@@ -111,6 +111,6 @@ func terminateEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	_, err := session.TerminateInstances(context.TODO(), input)
 	if err != nil {
-		log.Println("Error deleting instances:", err)
+		log.Println("Error terminating instances:", err)
 	}
 }

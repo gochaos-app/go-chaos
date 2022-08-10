@@ -20,8 +20,12 @@ func ExecuteChaos(cfg *GenConfig) error {
 		case "gcp":
 			fmt.Println("his will impact on GCP")
 		case "kubernetes":
-			fmt.Println("this will create chaos in k8s")
-			k8s.KubernetesChaos()
+			k8s.KubernetesChaos(
+				cfg.Job[i].Namespace,
+				cfg.Job[i].Service,
+				cfg.Job[i].Chaos.Tag,
+				cfg.Job[i].Chaos.Chaos,
+				cfg.Job[i].Chaos.Count)
 		case "script":
 			fmt.Println("This will execute a custom script")
 		case "":

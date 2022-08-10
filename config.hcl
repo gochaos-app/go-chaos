@@ -6,24 +6,32 @@ job "aws" "ec2" {
     config "chaos" {
         tag = "Name:test"
         chaos = "terminate"
-        count = 1
+        count = 0
+    }
+}
+
+job "aws" "s3" {
+    config "chaos" {
+        tag = "PREFIX:test"
+        count = 0
+        chaos = "terminate"
     }
 }
 
 job "aws" "lambda" {
     config "chaos" {
         tag = "tag:example"
-        count = 3
+        count = 0
         chaos = "terminate"
     }
 }
 
-
 job "kubernetes" "deployment" {
-    
+    namespace = "default"
     config "chaos" {
-        tag = "name:dev-app"
+        tag = "role:myrole"
         count = 1
-        chaos = "TERMINATE"
+        chaos = "terminate"
     }
 }
+
