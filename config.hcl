@@ -26,12 +26,12 @@ job "aws" "lambda" {
     }
 }
 
-job "kubernetes" "deployment" {
+job "kubernetes" "pod" {
     namespace = "default"
     config "chaos" {
         tag = "role:myrole"
         count = 1
-        chaos = "terminate"
+        chaos = "terminateAll"
     }
 }
 

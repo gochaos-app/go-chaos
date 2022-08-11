@@ -6,9 +6,12 @@ import (
 	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 )
 
-func podFn(namespace string, tag string, number int) {
+type chaosPodfn func([]string, string, string, *kubernetes.Clientset)
+
+func podFn(namespace string, tag string, chaos string, number int) {
 	//Checking if go-chaos needs to do anything
 	if number == 0 {
 		log.Println("Will not destroy any Pod")
@@ -24,16 +27,14 @@ func podFn(namespace string, tag string, number int) {
 
 	//Logging k8s
 	clientset, _ := K8sConfig()
-
 	//List pods
 	podClient := clientset.CoreV1().Pods(namespace)
-
 	list, err := podClient.List(context.TODO(), metav1.ListOptions{
 		LabelSelector: label,
 	})
 
 	if err != nil {
-		log.Println("Error", err)
+		log.Println("Error:", err)
 		return
 	}
 	var podList []string
@@ -47,12 +48,36 @@ func podFn(namespace string, tag string, number int) {
 		return
 	}
 	podList = podList[:number]
+
+	podsMap := map[string]chaosPodfn{
+		"terminate":    terminatePodFn,
+		"terminateAll": terminateAllFn,
+	}
+
+	podsMap[chaos](podList, namespace, label, clientset)
+
+}
+
+func terminatePodFn(podList []string, namespace string, tags string, client *kubernetes.Clientset) {
+	pods := client.CoreV1().Pods(namespace)
 	for _, pod := range podList {
-		err := podClient.Delete(context.TODO(), pod, metav1.DeleteOptions{})
+		err := pods.Delete(context.TODO(), pod, metav1.DeleteOptions{})
 		log.Println("Terminating pod:", pod)
 		if err != nil {
 			log.Println("Could not delete pod", err)
 			return
 		}
+	}
+}
+
+func terminateAllFn(podList []string, namespace string, tags string, client *kubernetes.Clientset) {
+	pods := client.CoreV1().Pods(namespace)
+	log.Println("Terminating collection with labels:", tags)
+	err := pods.DeleteCollection(context.TODO(), metav1.DeleteOptions{}, metav1.ListOptions{
+		LabelSelector: tags,
+	})
+	if err != nil {
+		log.Println("Could not delete pod collection", err)
+		return
 	}
 }

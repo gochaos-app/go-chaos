@@ -10,7 +10,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-type k8sfn func(string, string, int)
+type k8sfn func(string, string, string, int)
 
 func K8sConfig() (*kubernetes.Clientset, error) {
 	defaultCfg := filepath.Join(os.Getenv("HOME"), ".kube", "config")
@@ -35,5 +35,5 @@ func KubernetesChaos(namespace string, service string, tag string, chaos string,
 		"deployment": deploymentFn,
 	}
 
-	k8sMap[service](namespace, tag, number)
+	k8sMap[service](namespace, tag, chaos, number)
 }

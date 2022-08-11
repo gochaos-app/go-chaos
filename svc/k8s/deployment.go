@@ -8,7 +8,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func deploymentFn(namespace string, tag string, number int) {
+func deploymentFn(namespace string, tag string, chaos string, number int) {
 	//Checking if go-chaos needs to do anything
 	if number == 0 {
 		log.Println("Will not destroy any deployment")
