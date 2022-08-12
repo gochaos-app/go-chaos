@@ -20,9 +20,10 @@ func AmazonChaos(region string, service string, tag string, chaos string, number
 
 	awsMap := map[string]awsfn{
 		//"lambda": lambdaFn,
-		"ec2":    ec2Fn,
-		"s3":     s3Fn,
-		"lambda": lambdaFn,
+		"ec2":             ec2Fn,
+		"s3":              s3Fn,
+		"lambda":          lambdaFn,
+		"ec2_autoscaling": autoscalerFn,
 	}
 	awsMap[service](cfg, tag, chaos, number)
 

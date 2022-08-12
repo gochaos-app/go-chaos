@@ -6,7 +6,10 @@ import (
 	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
 )
+
+type chaosDeploymentfn func([]string, string, string, *kubernetes.Clientset)
 
 func deploymentFn(namespace string, tag string, chaos string, number int) {
 	//Checking if go-chaos needs to do anything
@@ -47,6 +50,17 @@ func deploymentFn(namespace string, tag string, chaos string, number int) {
 	}
 
 	deploymentList = deploymentList[:number]
+
+	deploymentsMap := map[string]chaosDeploymentfn{
+		"terminate": terminateDeploymentFn,
+	}
+
+	deploymentsMap[chaos](deploymentList, namespace, label, clientset)
+
+}
+
+func terminateDeploymentFn(deploymentList []string, namespace string, tags string, client *kubernetes.Clientset) {
+	deploymentsClient := client.AppsV1().Deployments(namespace)
 
 	for _, dplmnt := range deploymentList {
 		err := deploymentsClient.Delete(context.TODO(), dplmnt, metav1.DeleteOptions{})

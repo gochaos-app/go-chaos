@@ -10,9 +10,18 @@ job "aws" "ec2" {
     }
 }
 
+job "aws" "ec2_autoscaling" {
+    region = "us-east-1"
+    config "chaos" {
+        tag = "env:prod"
+        chaos = "terminate"
+        count = 20
+    }
+}
+
 job "aws" "s3" {
     config "chaos" {
-        tag = "PREFIX:test"
+        tag = "PREFIX:app"
         count = 0
         chaos = "terminate"
     }
@@ -26,12 +35,22 @@ job "aws" "lambda" {
     }
 }
 
+
 job "kubernetes" "pod" {
     namespace = "default"
     config "chaos" {
-        tag = "role:myrole"
-        count = 1
+        tag = "app:nginx"
+        count = 0
         chaos = "terminateAll"
+    }
+}
+
+job "kubernetes" "deployment" {
+    namespace = "default"
+    config "chaos" {
+        tag = "app:nginx"
+        count = 0
+        chaos = "terminate"
     }
 }
 
