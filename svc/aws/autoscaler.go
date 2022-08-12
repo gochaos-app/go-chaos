@@ -52,7 +52,6 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
 }
 
 func updateAutoscalingFn(list []string, num int, tag string, session *autoscaling.Client) {
-
 	num32 := int32(num)
 	if len(list) > 1 {
 		log.Println("Found more than one autoscaling groups with tags:", tag)
