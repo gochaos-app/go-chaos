@@ -42,7 +42,13 @@ func main() {
 						os.Exit(1)
 					}
 					fmt.Println("Destroy initiated")
-					cmd.LoadConfig(filename)
+					cfg, err := cmd.LoadConfig(filename)
+					if err != nil {
+						return err
+					}
+					if cmd.ExecuteChaos(cfg) != nil {
+						return err
+					}
 					return nil
 				},
 			},

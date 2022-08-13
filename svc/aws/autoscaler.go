@@ -47,6 +47,7 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
 	autoscalingMap := map[string]chaosAutoscalerfn{
 		"terminate": terminateAutoScalingFn,
 		"update":    updateAutoscalingFn,
+		"reboot":    rebootAutoscalingFn,
 	}
 	autoscalingMap[chaos](autoscalingList, number, tag, svc)
 }
@@ -87,5 +88,22 @@ func terminateAutoScalingFn(list []string, num int, tag string, session *autosca
 		if err != nil {
 			log.Println("Error terminating autoscaling group:", err)
 		}
+	}
+}
+
+func rebootAutoscalingFn(list []string, num int, tag string, session *autoscaling.Client) {
+	if len(list) > 1 {
+		log.Println("Found more than one autoscaling groups with tags:", tag)
+		return
+	}
+	autoscalingName := list[0]
+	input := &autoscaling.StartInstanceRefreshInput{
+		AutoScalingGroupName: aws.String(autoscalingName),
+	}
+
+	log.Println("Refreshing all instances in autoscaling group:", autoscalingName)
+	_, err := session.StartInstanceRefresh(context.TODO(), input)
+	if err != nil {
+		log.Println("Error refreshing instances autoscaling group:", err)
 	}
 }

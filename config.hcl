@@ -11,11 +11,11 @@ job "aws" "ec2" {
 }
 
 job "aws" "ec2_autoscaling" {
-    region = "us-east-1"
+    region = "us-west-2"
     config "chaos" {
         tag = "env:prod"
-        chaos = "terminate"
-        count = 20
+        chaos = "reboot"
+        count = 0
     }
 }
 
