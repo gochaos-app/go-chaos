@@ -68,7 +68,7 @@ go-chaos has a number of predifined chaos actions on several resources (AWS and 
 ```
 terminate
 update
-reboot
+addto
 ```
 
 * Compute EC2:

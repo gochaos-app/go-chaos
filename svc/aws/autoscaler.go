@@ -47,7 +47,7 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
 	autoscalingMap := map[string]chaosAutoscalerfn{
 		"terminate": terminateAutoScalingFn,
 		"update":    updateAutoscalingFn,
-		"reboot":    rebootAutoscalingFn,
+		"addto":     addtoAutoscalingFn,
 	}
 	autoscalingMap[chaos](autoscalingList, number, tag, svc)
 }
@@ -91,18 +91,20 @@ func terminateAutoScalingFn(list []string, num int, tag string, session *autosca
 	}
 }
 
-func rebootAutoscalingFn(list []string, num int, tag string, session *autoscaling.Client) {
+func addtoAutoscalingFn(list []string, num int, tag string, session *autoscaling.Client) {
 	if len(list) > 1 {
 		log.Println("Found more than one autoscaling groups with tags:", tag)
 		return
 	}
+	num32 := int32(num)
 	autoscalingName := list[0]
-	input := &autoscaling.StartInstanceRefreshInput{
+	input := &autoscaling.SetDesiredCapacityInput{
 		AutoScalingGroupName: aws.String(autoscalingName),
+		DesiredCapacity:      aws.Int32(num32),
 	}
 
 	log.Println("Refreshing all instances in autoscaling group:", autoscalingName)
-	_, err := session.StartInstanceRefresh(context.TODO(), input)
+	_, err := session.SetDesiredCapacity(context.TODO(), input)
 	if err != nil {
 		log.Println("Error refreshing instances autoscaling group:", err)
 	}

@@ -14,8 +14,8 @@ job "aws" "ec2_autoscaling" {
     region = "us-west-2"
     config "chaos" {
         tag = "env:prod"
-        chaos = "reboot"
-        count = 0
+        chaos = "addto"
+        count = 6
     }
 }
 
