@@ -5,7 +5,7 @@ with declarative code and run chaos experiments in your cloud infrastructure. Al
 
 ***If you want to perform chaos experiments as code in your infrastructure, but do not have monitoring, IaC, automated CI/CD or an easy way to recover, then sorry, CHAOS ENGINEERING IS NOT FOR YOU***
 
-go-chaos read chaos experiements in HCL format.
+go-chaos read chaos experiments in HCL format.
 
 Create a directory in you computer
 
@@ -111,8 +111,7 @@ go-chaos has been in development for quite sometime, there are some important mo
 * Same interface to all functions.
 * Remove conditions in favor of a simple hashmap for events. 
 
-###
-rules: 
+### Rules: 
 * For any new functionality or bug fix create a PR to main branch.
 * Only tags are made for production.
 * Working and compiling code over perfect code. (we are not making an operating system or flying a plane here) 
