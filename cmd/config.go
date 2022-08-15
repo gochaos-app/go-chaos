@@ -1,9 +1,10 @@
 package cmd
 
 type GenConfig struct {
-	App         string      `hcl:"app"`
-	Description string      `hcl:"description"`
-	Job         []JobConfig `hcl:"job,block"`
+	App         string        `hcl:"app"`
+	Description string        `hcl:"description"`
+	Job         []JobConfig   `hcl:"job,block"`
+	Script      *ScriptConfig `hcl:"script,block"`
 }
 
 type JobConfig struct {
@@ -15,8 +16,11 @@ type JobConfig struct {
 }
 
 type ChaosConfig struct {
-	Config string `hcl:"chaos,label"`
-	Tag    string `hcl:"tag"`
-	Chaos  string `hcl:"chaos"`
-	Count  int    `hcl:"count"`
+	Tag   string `hcl:"tag"`
+	Chaos string `hcl:"chaos"`
+	Count int    `hcl:"count"`
+}
+
+type ScriptConfig struct {
+	Source string `hcl:"source"`
 }

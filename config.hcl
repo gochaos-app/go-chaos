@@ -1,18 +1,19 @@
 app = "TestingApp"
 description = "this is a test" 
-    
+
+
 job "aws" "ec2" {
     region = "us-east-1"
-    config "chaos" {
+    config {
         tag = "Name:test"
         chaos = "terminate"
-        count = 0
+        count = 1
     }
 }
 
 job "aws" "ec2_autoscaling" {
     region = "us-west-2"
-    config "chaos" {
+    config {
         tag = "env:prod"
         chaos = "addto"
         count = 6
@@ -20,7 +21,7 @@ job "aws" "ec2_autoscaling" {
 }
 
 job "aws" "s3" {
-    config "chaos" {
+    config {
         tag = "PREFIX:app"
         count = 0
         chaos = "terminate"
@@ -28,7 +29,7 @@ job "aws" "s3" {
 }
 
 job "aws" "lambda" {
-    config "chaos" {
+    config {
         tag = "tag:example"
         count = 0
         chaos = "terminate"
@@ -38,7 +39,7 @@ job "aws" "lambda" {
 
 job "kubernetes" "pod" {
     namespace = "default"
-    config "chaos" {
+    config {
         tag = "app:nginx"
         count = 0
         chaos = "terminateAll"
@@ -47,7 +48,7 @@ job "kubernetes" "pod" {
 
 job "kubernetes" "deployment" {
     namespace = "default"
-    config "chaos" {
+    config {
         tag = "app:nginx"
         count = 0
         chaos = "terminate"
