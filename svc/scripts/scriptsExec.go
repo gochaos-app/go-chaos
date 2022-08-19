@@ -5,9 +5,9 @@ import (
 	"os/exec"
 )
 
-func ExecuteScript(script string) {
+func ExecuteScript(script string, executor string) {
 	log.Println("Executing script:", script)
-	comand, err := exec.Command("/bin/sh", script).Output()
+	comand, err := exec.Command(executor, script).Output()
 	if err != nil {
 		log.Println("error", err)
 	}

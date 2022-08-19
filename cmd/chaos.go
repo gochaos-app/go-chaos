@@ -12,7 +12,7 @@ func ExecuteChaos(cfg *GenConfig) error {
 	// Before executing chaos, if there's a script will be executed
 
 	if cfg.Script != nil {
-		scripts.ExecuteScript(cfg.Script.Source)
+		scripts.ExecuteScript(cfg.Script.Source, cfg.Script.Executor)
 	}
 
 	for i := 0; i < len(cfg.Job); i++ {

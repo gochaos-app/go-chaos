@@ -1,7 +1,8 @@
 app = "TestingApp"
 description = "this is a test" 
 
-script "bash script" {
+script {
+    executor = "bash"
     source = "hello.sh"
 }
 
