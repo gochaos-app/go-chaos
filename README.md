@@ -102,6 +102,17 @@ terminateAll
 ```
 terminate
 ```
+
+go-chaos can also execute a single script at the beginning of the file
+```
+script {
+    executor   = "bash"
+    source     = "destroy.sh"
+}
+```
+
+
+
 ## Roadmap and news
 
 go-chaos has been in development for quite sometime, there are some important modifications over the first versions: 

@@ -1,11 +1,11 @@
 app = "TestingApp"
 description = "this is a test" 
 
-script {
-    executor = "bash"
-    source = "hello.sh"
-}
 
+script {
+    executor = "lua"
+    source = "hello.lua"
+}
 
 job "aws" "ec2" {
     region = "us-east-1"
