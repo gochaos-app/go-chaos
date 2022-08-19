@@ -22,5 +22,6 @@ type ChaosConfig struct {
 }
 
 type ScriptConfig struct {
-	Source string `hcl:"source"`
+	Description string `hcl:"description,label"`
+	Source      string `hcl:"source"`
 }

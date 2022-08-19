@@ -1,6 +1,10 @@
 app = "TestingApp"
 description = "this is a test" 
 
+script "bash script" {
+    source = "hello.sh"
+}
+
 
 job "aws" "ec2" {
     region = "us-east-1"
