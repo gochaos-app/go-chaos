@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/mental12345/chaosCLI/ops"
 )
 
 type chaosS3fn func([]string, int, *s3.Client)
@@ -58,7 +59,7 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int) {
 		"terminate":      terminateS3Fn,
 		"delete_content": deletectnS3Fn,
 	}
-	s3Map[chaos](fixList, number, svc)
+	s3Map[chaos](ops.Random(fixList), number, svc)
 
 }
 

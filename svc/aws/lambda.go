@@ -7,6 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
+	"github.com/mental12345/chaosCLI/ops"
 )
 
 type chaosLambdafn func([]string, int, *lambda.Client)
@@ -50,11 +51,12 @@ func lambdaFn(sess aws.Config, tag string, chaos string, number int) {
 		log.Println("Chaos not permitted: Out of dimension array, trying to delete", number, "functions.", len(arnFunctions), "functions found")
 		return
 	}
+
 	lambdaMap := map[string]chaosLambdafn{
 		"terminate": terminateLambdaFn,
 		"stop":      stopLambdaFn,
 	}
-	lambdaMap[chaos](arnFunctions, number, svc)
+	lambdaMap[chaos](ops.Random(arnFunctions), number, svc)
 }
 
 func terminateLambdaFn(list []string, number int, session *lambda.Client) {

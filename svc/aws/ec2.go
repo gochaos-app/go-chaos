@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
+	"github.com/mental12345/chaosCLI/ops"
 )
 
 type chaosEC2fn func([]string, int, *ec2.Client)
@@ -58,7 +59,7 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 		"reboot":    rebootEC2Fn,
 	}
 
-	ec2Map[chaos](EC2instances, number, svc)
+	ec2Map[chaos](ops.Random(EC2instances), number, svc)
 
 }
 
