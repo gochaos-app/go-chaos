@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/mental12345/chaosCLI/svc/aws"
-	"github.com/mental12345/chaosCLI/svc/k8s"
-	"github.com/mental12345/chaosCLI/svc/scripts"
+	"github.com/mental12345/chaosctl/svc/aws"
+	"github.com/mental12345/chaosctl/svc/k8s"
+	"github.com/mental12345/chaosctl/svc/scripts"
 )
 
 func ExecuteChaos(cfg *GenConfig) error {

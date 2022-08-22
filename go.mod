@@ -1,4 +1,4 @@
-module github.com/mental12345/chaosCLI
+module github.com/mental12345/chaosctl
 
 go 1.18
 

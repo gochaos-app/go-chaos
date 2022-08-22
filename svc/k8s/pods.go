@@ -5,6 +5,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/mental12345/chaosctl/ops"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
@@ -54,7 +55,7 @@ func podFn(namespace string, tag string, chaos string, number int) {
 		"terminateAll": terminateAllFn,
 	}
 
-	podsMap[chaos](podList, namespace, label, clientset)
+	podsMap[chaos](ops.Random(podList), namespace, label, clientset)
 
 }
 

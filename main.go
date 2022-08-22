@@ -1,17 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
-	"github.com/mental12345/chaosCLI/cmd"
+	"github.com/mental12345/chaosctl/cmd"
 	"github.com/urfave/cli"
 )
 
 func main() {
 	app := &cli.App{
-		Name:  "goChaos",
+		Name:  "chaosctl",
 		Usage: "A terminal based app that injects chaos into your cloud infrastrucure",
 		Action: func(c *cli.Context) error {
 			filename := "config.hcl"
@@ -19,7 +18,9 @@ func main() {
 				log.Println("Cannot read file, or file does not exist", err)
 				os.Exit(1)
 			}
-			fmt.Println("Destroy initiated...")
+			log.Println("Validation initiated")
+			cmd.ValidateFile(filename)
+			log.Println("Destroy initiated...")
 			cfg, err := cmd.LoadConfig(filename)
 			if err != nil {
 				return err
@@ -27,7 +28,6 @@ func main() {
 			if cmd.ExecuteChaos(cfg) != nil {
 				return err
 			}
-
 			return nil
 		},
 		Commands: []cli.Command{
@@ -41,7 +41,7 @@ func main() {
 						log.Println("Cannot read file, or file does not exist", err)
 						os.Exit(1)
 					}
-					fmt.Println("Destroy initiated")
+					log.Println("Destroy initiated")
 					cfg, err := cmd.LoadConfig(filename)
 					if err != nil {
 						return err
@@ -62,7 +62,7 @@ func main() {
 						log.Println("Cannot read file, or file does not exist", err)
 						os.Exit(1)
 					}
-					fmt.Println("Validation initiated")
+					log.Println("Validation initiated")
 					cmd.ValidateFile(filename)
 					return nil
 				},

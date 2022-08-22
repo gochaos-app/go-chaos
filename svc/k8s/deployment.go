@@ -5,6 +5,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/mental12345/chaosctl/ops"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )
@@ -55,8 +56,7 @@ func deploymentFn(namespace string, tag string, chaos string, number int) {
 		"terminate": terminateDeploymentFn,
 	}
 
-	deploymentsMap[chaos](deploymentList, namespace, label, clientset)
-
+	deploymentsMap[chaos](ops.Random(deploymentList), namespace, label, clientset)
 }
 
 func terminateDeploymentFn(deploymentList []string, namespace string, tags string, client *kubernetes.Clientset) {
