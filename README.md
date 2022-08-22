@@ -1,6 +1,6 @@
 # chaosctl
 
-chaos engineering as code. chaosctl is a new app that lets you inject chaos in your infrastructure
+chaos engineering as code. chaosctl is an app that lets you inject chaos in your infrastructure
 with declarative code and run chaos experiments in your cloud infrastructure. Although chaosctl works mainly with the ***server-shutdown perturbation model***, it does have some extra capabilities such as data deletion (objects and data) and increase or decrease of resources.
 
 ***If you want to perform chaos experiments as code in your infrastructure, but do not have monitoring, IaC, automated CI/CD or an easy way to recover, then sorry, CHAOS ENGINEERING IS NOT FOR YOU***
