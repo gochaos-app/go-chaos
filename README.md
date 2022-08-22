@@ -1,11 +1,11 @@
-# go-chaos
+# chaosctl
 
-chaos engineering as code. go-chaos is a new app that lets you inject chaos in your infrastructure
-with declarative code and run chaos experiments in your cloud infrastructure. Although go-chaos works mainly with the ***server-shutdown perturbation model***, it does have some extra capabilities such as data deletion (objects and data) and increase or decrease of resources.
+chaos engineering as code. chaosctl is a new app that lets you inject chaos in your infrastructure
+with declarative code and run chaos experiments in your cloud infrastructure. Although chaosctl works mainly with the ***server-shutdown perturbation model***, it does have some extra capabilities such as data deletion (objects and data) and increase or decrease of resources.
 
 ***If you want to perform chaos experiments as code in your infrastructure, but do not have monitoring, IaC, automated CI/CD or an easy way to recover, then sorry, CHAOS ENGINEERING IS NOT FOR YOU***
 
-go-chaos read chaos experiments in HCL format.
+chaosctl read chaos experiments in HCL format.
 
 Create a directory in you computer
 
@@ -28,9 +28,9 @@ job "aws" "ec2" {
     }
 }
 ```
-Once the file saved, execute the file with command `go-chaos d config.hcl`
+Once the file saved, execute the file with command `chaosctl d config.hcl`
 
-Several jobs are possible with go-chaos, jobs will execute from top to bottom. 
+Several jobs are possible with chaosctl, jobs will execute from top to bottom. 
 ```
 job "aws" "ec2" {
     region = "us-east-1"
@@ -53,14 +53,14 @@ job "aws" "s3" {
 ```
 # Limit blast radius
 
-go-chaos limits itself with the use of config options on each job: 
+chaosctl limits itself with the use of config options on each job: 
 * region:  will not destroy or delete anything on other cloud regions.
 * namespace: limits the blast radius to a single namespace (for K8s only).
 * tag:     single tag, that will find the specified resources and kill those. 
-* count:   Option to limit the number of resources that go-chaos will destroy. 
+* count:   Option to limit the number of resources that chaosctl will destroy. 
 
 # What it can do? 
-go-chaos has a number of predifined chaos actions on several resources (AWS and K8s)
+chaosctl has a number of predifined chaos actions on several resources (AWS and K8s)
 
 ## AWS
 
@@ -103,7 +103,7 @@ terminateAll
 terminate
 ```
 
-go-chaos can also execute a single script at the beginning of the file
+chaosctl can also execute a single script at the beginning of the file
 ```
 script {
     executor   = "bash"
@@ -115,7 +115,7 @@ script {
 
 ## Roadmap and news
 
-go-chaos has been in development for quite sometime, there are some important modifications over the first versions: 
+chaosctl has been in development for quite sometime, there are some important modifications over the first versions: 
 * uses HCL instead of JSON, YAML or TOML. 
 * Go 1.18.5, instead of 1.14 or 1.16.
 * aws-sdk-go-v2 instead of v1. 
@@ -129,7 +129,3 @@ go-chaos has been in development for quite sometime, there are some important mo
 * Working and compiling code over perfect code. (we are not making an operating system or flying a plane here) 
 * No random function (is difficult to manage randomness for small sets).
 * No Windows version (it will require some serious rewriting).
-
-
-
-
