@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mental12345/chaosctl/svc/aws"
+	"github.com/mental12345/chaosctl/svc/do"
 	"github.com/mental12345/chaosctl/svc/k8s"
 	"github.com/mental12345/chaosctl/svc/scripts"
 )
@@ -24,8 +25,13 @@ func ExecuteChaos(cfg *GenConfig) error {
 				cfg.Job[i].Chaos.Tag,
 				cfg.Job[i].Chaos.Chaos,
 				cfg.Job[i].Chaos.Count)
-		case "gcp":
-			fmt.Println("his will impact on GCP")
+		case "do":
+			do.DigitalOceanChaos(
+				cfg.Job[i].Region,
+				cfg.Job[i].Service,
+				cfg.Job[i].Chaos.Tag,
+				cfg.Job[i].Chaos.Chaos,
+				cfg.Job[i].Chaos.Count)
 		case "kubernetes":
 			k8s.KubernetesChaos(
 				cfg.Job[i].Namespace,
