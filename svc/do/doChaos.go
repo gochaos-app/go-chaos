@@ -25,7 +25,8 @@ func DigitalOceanChaos(region string, service string, tag string, chaos string, 
 	}
 
 	awsMap := map[string]dofn{
-		"droplet": DropletFn,
+		"droplet":          DropletFn,
+		"do_load_balancer": LoadBalancerFn,
 	}
 	awsMap[service](client, tag, chaos, number)
 }
