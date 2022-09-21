@@ -26,6 +26,7 @@ func LoadBalancerFn(config *godo.Client, tag string, chaos string, number int) {
 	}
 	if lbName == "" || lbID == "" {
 		log.Println("Couldn't find the load balancer")
+		return
 	}
 	LbMap := map[string]chaosLoadBalancerFn{
 		"remove": removeDropletsFn,
@@ -49,11 +50,9 @@ func removeDropletsFn(id string, name string, number int, client *godo.Client) {
 	}
 	dropletsIDs := ops.Random(LoadBalancers.DropletIDs)
 	dropletsIDs = dropletsIDs[:number]
-	response, err := client.LoadBalancers.RemoveDroplets(context.TODO(), id, dropletsIDs...)
+	_, err = client.LoadBalancers.RemoveDroplets(context.TODO(), id, dropletsIDs...)
 	if err != nil {
-		log.Println("could not remove droplets from load balancer")
+		log.Println("could not remove droplets from load balancer: ", err)
 		return
 	}
-	log.Println(response)
-
 }
