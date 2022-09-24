@@ -20,13 +20,13 @@ func DigitalOceanChaos(region string, service string, tag string, chaos string, 
 	client := godo.NewFromToken(token)
 
 	if number == 0 {
-		log.Println("Will not destroy any droplet")
+		log.Println("Will not destroy any digital ocean resource")
 		return
 	}
 
 	awsMap := map[string]dofn{
-		"droplet":          DropletFn,
-		"do_load_balancer": LoadBalancerFn,
+		"droplet":       DropletFn,
+		"load_balancer": LoadBalancerFn,
 	}
 	awsMap[service](client, tag, chaos, number)
 }

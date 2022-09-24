@@ -29,20 +29,45 @@ func LoadBalancerFn(config *godo.Client, tag string, chaos string, number int) {
 		return
 	}
 	LbMap := map[string]chaosLoadBalancerFn{
-		"remove": removeDropletsFn,
+		"removeDroplets": removeDropletsFn,
+		"removeRules":    removeRulesFn,
 	}
 	LbMap[chaos](lbID, lbName, number, config)
+}
+
+func removeRulesFn(id string, name string, number int, client *godo.Client) {
+	LoadBalancers, _, err := client.LoadBalancers.Get(context.TODO(), id)
+	if err != nil {
+		log.Println("error getting load balancer", err)
+	}
+	if number == 0 {
+		log.Println("Will not execute removal of rules")
+		return
+	}
+	if len(LoadBalancers.ForwardingRules) < number {
+		log.Println("Cannot remove from load balancer, existing rules in load balancer:", len(LoadBalancers.ForwardingRules))
+		return
+	}
+
+	rulesIDs := LoadBalancers.ForwardingRules
+	rulesIDs = rulesIDs[:number]
+	_, err = client.LoadBalancers.RemoveForwardingRules(context.TODO(), id, rulesIDs...)
+	if err != nil {
+		log.Println("could not remove forwarding rules from load balancer: ", err)
+		return
+	}
 }
 
 func removeDropletsFn(id string, name string, number int, client *godo.Client) {
 
 	LoadBalancers, _, err := client.LoadBalancers.Get(context.TODO(), id)
 	if err != nil {
-		log.Println("error listing droplets:", err)
+		log.Println("error getting load balancer:", err)
 		return
 	}
 	if number == 0 {
 		log.Println("Will not execute removal of droplets")
+		return
 	}
 	if len(LoadBalancers.DropletIDs) < number {
 		log.Println("Cannot remove from load balancer, existing droplets in load balancer:", len(LoadBalancers.DropletIDs))
