@@ -55,8 +55,12 @@ func deploymentFn(namespace string, tag string, chaos string, number int) {
 	deploymentsMap := map[string]chaosDeploymentfn{
 		"terminate": terminateDeploymentFn,
 	}
-
-	deploymentsMap[chaos](ops.Random(deploymentList), namespace, label, clientset)
+	if _, servExists := deploymentsMap[chaos]; servExists {
+		deploymentsMap[chaos](ops.Random(deploymentList), namespace, label, clientset)
+	} else {
+		log.Println("Chaos not found")
+		return
+	}
 }
 
 func terminateDeploymentFn(deploymentList []string, namespace string, tags string, client *kubernetes.Clientset) {

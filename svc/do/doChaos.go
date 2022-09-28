@@ -24,9 +24,15 @@ func DigitalOceanChaos(region string, service string, tag string, chaos string, 
 		return
 	}
 
-	awsMap := map[string]dofn{
+	doMap := map[string]dofn{
 		"droplet":       DropletFn,
 		"load_balancer": LoadBalancerFn,
 	}
-	awsMap[service](client, tag, chaos, number)
+	if _, servExists := doMap[service]; servExists {
+		doMap[service](client, tag, chaos, number)
+	} else {
+		log.Println("Service not found")
+		return
+	}
+
 }

@@ -56,7 +56,13 @@ func lambdaFn(sess aws.Config, tag string, chaos string, number int) {
 		"terminate": terminateLambdaFn,
 		"stop":      stopLambdaFn,
 	}
-	lambdaMap[chaos](ops.Random(arnFunctions), number, svc)
+	if _, servExists := lambdaMap[chaos]; servExists {
+		lambdaMap[chaos](ops.Random(arnFunctions), number, svc)
+	} else {
+		log.Println("Chaos not found")
+		return
+	}
+
 }
 
 func terminateLambdaFn(list []string, number int, session *lambda.Client) {

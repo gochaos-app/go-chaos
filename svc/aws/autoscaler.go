@@ -49,7 +49,12 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
 		"update":    updateAutoscalingFn,
 		"addto":     addtoAutoscalingFn,
 	}
-	autoscalingMap[chaos](autoscalingList, number, tag, svc)
+	if _, servExists := autoscalingMap[chaos]; servExists {
+		autoscalingMap[chaos](autoscalingList, number, tag, svc)
+	} else {
+		log.Println("chaos not found")
+		return
+	}
 }
 
 func updateAutoscalingFn(list []string, num int, tag string, session *autoscaling.Client) {

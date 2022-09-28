@@ -54,8 +54,12 @@ func podFn(namespace string, tag string, chaos string, number int) {
 		"terminate":    terminatePodFn,
 		"terminateAll": terminateAllFn,
 	}
-
-	podsMap[chaos](ops.Random(podList), namespace, label, clientset)
+	if _, servExists := podsMap[chaos]; servExists {
+		podsMap[chaos](ops.Random(podList), namespace, label, clientset)
+	} else {
+		log.Println("Chaos not found")
+		return
+	}
 
 }
 

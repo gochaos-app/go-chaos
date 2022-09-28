@@ -35,7 +35,13 @@ func DropletFn(config *godo.Client, tag string, chaos string, number int) {
 		"reboot":    rebootDropletFn,
 	}
 
-	DropletMap[chaos](ops.Random(DropletsInstances), number, config)
+	if _, servExists := DropletMap[chaos]; servExists {
+		DropletMap[chaos](ops.Random(DropletsInstances), number, config)
+	} else {
+		log.Println("Chaos not found")
+		return
+	}
+
 }
 
 func terminateDropletFn(dropletIDs []int, number int, client *godo.Client) {

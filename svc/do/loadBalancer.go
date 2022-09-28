@@ -32,7 +32,14 @@ func LoadBalancerFn(config *godo.Client, tag string, chaos string, number int) {
 		"removeDroplets": removeDropletsFn,
 		"removeRules":    removeRulesFn,
 	}
-	LbMap[chaos](lbID, lbName, number, config)
+
+	if _, servExists := LbMap[chaos]; servExists {
+		LbMap[chaos](lbID, lbName, number, config)
+	} else {
+		log.Println("Chaos not found")
+		return
+	}
+
 }
 
 func removeRulesFn(id string, name string, number int, client *godo.Client) {

@@ -34,6 +34,11 @@ func KubernetesChaos(namespace string, service string, tag string, chaos string,
 		"pod":        podFn,
 		"deployment": deploymentFn,
 	}
+	if _, servExists := k8sMap[service]; servExists {
+		k8sMap[service](namespace, tag, chaos, number)
+	} else {
+		log.Println("Service not found")
+		return
+	}
 
-	k8sMap[service](namespace, tag, chaos, number)
 }
