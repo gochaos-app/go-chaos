@@ -1,7 +1,7 @@
 app = "TestingApp"
 description = "this is a test" 
 
-job "do" "load_balancer" {
+job "linux" "load_balancer" {
     config {
         tag = "nyc3-load-balancer-01"
         chaos = "3emoveRules"
