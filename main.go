@@ -4,13 +4,13 @@ import (
 	"log"
 	"os"
 
-	"github.com/mental12345/chaosctl/cmd"
+	"github.com/mental12345/go-chaos/cmd"
 	"github.com/urfave/cli"
 )
 
 func main() {
 	app := &cli.App{
-		Name:  "chaosctl",
+		Name:  "go-chaos",
 		Usage: "A terminal based app that injects chaos into your cloud infrastrucure",
 		Action: func(c *cli.Context) error {
 			filename := "config.hcl"

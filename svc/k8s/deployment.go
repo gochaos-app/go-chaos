@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/mental12345/chaosctl/ops"
+	"github.com/mental12345/go-chaos/ops"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 )

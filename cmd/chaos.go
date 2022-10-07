@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/mental12345/chaosctl/svc/aws"
-	"github.com/mental12345/chaosctl/svc/do"
-	"github.com/mental12345/chaosctl/svc/k8s"
-	"github.com/mental12345/chaosctl/svc/scripts"
+	"github.com/mental12345/go-chaos/svc/aws"
+	"github.com/mental12345/go-chaos/svc/do"
+	"github.com/mental12345/go-chaos/svc/k8s"
+	"github.com/mental12345/go-chaos/svc/scripts"
 )
 
 func ExecuteChaos(cfg *GenConfig) error {

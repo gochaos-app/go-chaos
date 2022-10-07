@@ -7,7 +7,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/mental12345/chaosctl/ops"
+	"github.com/mental12345/go-chaos/ops"
 )
 
 type chaosS3fn func([]string, int, *s3.Client)
