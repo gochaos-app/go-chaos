@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/mental12345/go-chaos/cmd"
 	"github.com/urfave/cli"
@@ -37,6 +38,21 @@ func main() {
 				Usage:   "Execute destroy with custom file name",
 				Action: func(c *cli.Context) error {
 					filename := c.Args().Get(0)
+					if strings.HasPrefix(filename, "http") {
+						test, err := cmd.ReadFromURL(filename)
+						if err != nil {
+							return err
+						}
+						cfg, err := cmd.LoadConfig(test)
+						if err != nil {
+							return err
+						}
+						if cmd.ExecuteChaos(cfg) != nil {
+							return err
+						}
+						os.Exit(0)
+					}
+
 					if _, err := os.Stat(filename); err != nil {
 						log.Println("Cannot read file, or file does not exist", err)
 						os.Exit(1)
@@ -58,6 +74,14 @@ func main() {
 				Usage:   "validate file",
 				Action: func(c *cli.Context) error {
 					filename := c.Args().Get(0)
+					if strings.HasPrefix(filename, "http") {
+						test, err := cmd.ReadFromURL(filename)
+						if err != nil {
+							return err
+						}
+						cmd.ValidateFile(test)
+						os.Exit(0)
+					}
 					if _, err := os.Stat(filename); err != nil {
 						log.Println("Cannot read file, or file does not exist", err)
 						os.Exit(1)

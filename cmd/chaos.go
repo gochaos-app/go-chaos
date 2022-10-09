@@ -14,7 +14,6 @@ func ExecuteChaos(cfg *GenConfig) error {
 	if cfg.Script != nil {
 		scripts.ExecuteScript(cfg.Script.Source, cfg.Script.Executor)
 	}
-
 	for i := 0; i < len(cfg.Job); i++ {
 		switch cfg.Job[i].Cloud {
 		case "aws":
