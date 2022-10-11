@@ -1,10 +1,18 @@
 package cmd
 
 type GenConfig struct {
-	App         string        `hcl:"app"`
-	Description string        `hcl:"description"`
-	Job         []JobConfig   `hcl:"job,block"`
-	Script      *ScriptConfig `hcl:"script,block"`
+	App           string        `hcl:"app"`
+	Description   string        `hcl:"description"`
+	Job           []JobConfig   `hcl:"job,block"`
+	Script        *ScriptConfig `hcl:"script,block"`
+	Notifications []NotifConfig `hcl:"notification,block"`
+}
+
+type NotifConfig struct {
+	Type      string   `hcl:"type,label"`
+	FromEmail string   `hcl:"from"`
+	ToEmail   []string `hcl:"emails"`
+	Body      string   `hcl:"body"`
 }
 
 type JobConfig struct {

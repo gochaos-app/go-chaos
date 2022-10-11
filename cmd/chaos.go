@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/mental12345/go-chaos/notifications"
 	"github.com/mental12345/go-chaos/svc/aws"
 	"github.com/mental12345/go-chaos/svc/do"
 	"github.com/mental12345/go-chaos/svc/k8s"
@@ -42,6 +43,16 @@ func ExecuteChaos(cfg *GenConfig) error {
 	// After executing chaos, if there's a script will be executed
 	if cfg.Script != nil {
 		scripts.ExecuteScript(cfg.Script.Source, cfg.Script.Executor)
+	}
+	for i := 0; i < len(cfg.Notifications); i++ {
+		switch cfg.Notifications[i].Type {
+		case "email":
+			notifications.EmailNotification(cfg.Notifications[i].ToEmail, cfg.Notifications[i].Body, cfg.Notifications[i].FromEmail)
+		case "":
+			fmt.Println("I dont know what to do")
+		default:
+			fmt.Println("I dont understand the notification")
+		}
 	}
 	return nil
 }
