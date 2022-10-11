@@ -10,10 +10,6 @@ import (
 )
 
 func ExecuteChaos(cfg *GenConfig) error {
-	// Before executing chaos, if there's a script will be executed
-	if cfg.Script != nil {
-		scripts.ExecuteScript(cfg.Script.Source, cfg.Script.Executor)
-	}
 	for i := 0; i < len(cfg.Job); i++ {
 		switch cfg.Job[i].Cloud {
 		case "aws":
@@ -42,6 +38,10 @@ func ExecuteChaos(cfg *GenConfig) error {
 		default:
 			fmt.Println("I dont understand the service to execute chaos on")
 		}
+	}
+	// After executing chaos, if there's a script will be executed
+	if cfg.Script != nil {
+		scripts.ExecuteScript(cfg.Script.Source, cfg.Script.Executor)
 	}
 	return nil
 }
