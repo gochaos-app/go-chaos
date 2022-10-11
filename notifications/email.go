@@ -17,5 +17,6 @@ func EmailNotification(email []string, body string, from string) {
 			log.Printf("smtp error: %s", err)
 			return
 		}
+		log.Println("Sending notification to:", email[i])
 	}
 }

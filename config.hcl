@@ -46,8 +46,6 @@ job "aws" "s3" {
 
 notification "email" {
     from = "rodriguez.esparza.ramon@gmail.com"
-    emails = ["ramon.esparza@wizeline.com", 
-            "feribelles@gmail.com"
-            ]
+    emails = ["rodriguez.esparza.ramon@gmail.com","ramon.esparza@wizeline.com"]
     body  = "this is another test perrosinpatas" 
 }
