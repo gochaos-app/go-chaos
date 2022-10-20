@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/mental12345/go-chaos/cmd"
+	"github.com/mental12345/go-chaos/server"
 	"github.com/urfave/cli"
 )
 
@@ -88,6 +89,17 @@ func main() {
 					}
 					log.Println("Validation initiated")
 					cmd.ValidateFile(filename)
+					return nil
+				},
+			},
+			{
+				Name:    "server",
+				Aliases: []string{"s"},
+				Usage:   "start go-chaos server",
+				Action: func(c *cli.Context) error {
+					filename := c.Args().Get(0)
+					log.Println("Server initiated")
+					server.ServerFn(filename)
 					return nil
 				},
 			},
