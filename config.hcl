@@ -12,3 +12,8 @@ job "kubernetes" "node" {
     }
 }
 
+notification "email" {
+    from = "rodriguez.esparza.ramon@gmail.com"
+    emails = ["rodriguez.esparza.ramon@gmail.com"]
+    body = "I'm executing go-chaos, everything is fine"
+}
