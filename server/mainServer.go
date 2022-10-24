@@ -15,7 +15,7 @@ func getroot(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "Welcome to Go-Chaos!\n")
 	stringExecution := `To start running chaos engineering experiments, 
 
-* use http://go-chaos-url/experiment&config=path_to_chaos_experiment.hcl for single config experiments
+* use http://go-chaos-url/experiment?config=path_to_chaos_experiment.hcl for single config experiments
 `
 	io.WriteString(w, stringExecution)
 }
