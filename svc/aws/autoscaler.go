@@ -30,7 +30,7 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
 		},
 	})
 	if err != nil {
-		log.Panicln("Got an error retrieving information about EC2 autoscaling:", err)
+		log.Println("Got an error retrieving information about EC2 autoscaling:", err)
 		return
 	}
 	var autoscalingList []string
@@ -108,7 +108,6 @@ func addtoAutoscalingFn(list []string, num int, tag string, session *autoscaling
 		DesiredCapacity:      aws.Int32(num32),
 	}
 
-	log.Println("Refreshing all instances in autoscaling group:", autoscalingName)
 	_, err := session.SetDesiredCapacity(context.TODO(), input)
 	if err != nil {
 		log.Println("Error refreshing instances autoscaling group:", err)

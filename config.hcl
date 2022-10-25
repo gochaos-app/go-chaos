@@ -1,14 +1,12 @@
 app = "TestingApp"
 description = "this is a test" 
 
-
-
-job "kubernetes" "deployment" {
-    namespace = "default"
+job "aws" "ec2_autoscaling" {
+    region = "us-west-2"
     config {
-        tag = "app:nginx"
-        count = 15
+        tag = "env:prod"
         chaos = "update"
+        count = 0
     }
 }
 

@@ -13,11 +13,6 @@ import (
 type chaosDeploymentfn func([]string, string, string, int, *kubernetes.Clientset)
 
 func deploymentFn(namespace string, tag string, chaos string, number int) {
-	//Checking if go-chaos needs to do anything
-	if number == 0 {
-		log.Println("Will not destroy any deployment")
-		return
-	}
 
 	//Separating tags and adding "="
 	var key, value string
@@ -58,10 +53,17 @@ func deploymentFn(namespace string, tag string, chaos string, number int) {
 }
 
 func terminateDeploymentFn(deploymentList []string, namespace string, tags string, number int, client *kubernetes.Clientset) {
+
+	if number == 0 {
+		log.Println("Will not perform chaos on any deployment")
+		return
+	}
+
 	if number > len(deploymentList) {
 		log.Println("Chaos not permitted", len(deploymentList), "deployments found.", "Number of deployment to destroy is:", number)
 		return
 	}
+
 	deploymentList = deploymentList[:number]
 	deploymentsClient := client.AppsV1().Deployments(namespace)
 
