@@ -1,12 +1,12 @@
 app = "TestingApp"
 description = "this is a test" 
 
-job "aws" "ec2_autoscaling" {
-    region = "us-west-2"
+job "kubernetes" "daemonSet" {
+    namespace = "kube-system"
     config {
-        tag = "env:prod"
-        chaos = "update"
-        count = 0
+        tag = "k8s-app:fluentd-logging"
+        chaos = "terminate"
+        count = 1
     }
 }
 

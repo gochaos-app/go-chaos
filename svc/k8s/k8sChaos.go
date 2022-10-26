@@ -33,6 +33,7 @@ func KubernetesChaos(namespace string, service string, tag string, chaos string,
 	k8sMap := map[string]k8sfn{
 		"pod":        podFn,
 		"deployment": deploymentFn,
+		"daemonSet":  daemonFn,
 	}
 	if _, servExists := k8sMap[service]; servExists {
 		k8sMap[service](namespace, tag, chaos, number)
