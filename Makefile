@@ -12,9 +12,3 @@ compile:
 	GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o bin/go-chaos-linux-arm64 .
 	GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o bin/go-chaos-darwin .
 	GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o bin/go-chaos-darwin-m1 .
-
-docker:
-	docker build .
-
-podman:
-	podman build .
