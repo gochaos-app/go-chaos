@@ -1,9 +1,6 @@
 app = "TestingApp"
 description = "this is a test" 
 
-variables {
-    var_file = "testarc"
-}
 
 #job "kubernetes" "daemonSet" {
 #    namespace = "kube-system"
