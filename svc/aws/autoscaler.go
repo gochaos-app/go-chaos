@@ -47,7 +47,7 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
 	autoscalingMap := map[string]chaosAutoscalerfn{
 		"terminate": terminateAutoScalingFn,
 		"update":    updateAutoscalingFn,
-		"addto":     addtoAutoscalingFn,
+		"desired":   addtoAutoscalingFn,
 	}
 	if _, servExists := autoscalingMap[chaos]; servExists {
 		autoscalingMap[chaos](autoscalingList, number, tag, svc)

@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func EmailNotification(email []string, body string, from string) {
+func GmailNotification(email []string, body string, from string) {
 	pass := os.Getenv("GMAIL_APP_TOKEN")
 
 	for i := 0; i < len(email); i++ {
