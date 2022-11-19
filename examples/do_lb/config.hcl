@@ -17,7 +17,7 @@ job "do" "load_balancer" {
     }
 }
 
-notifications "email" {
+notifications "gmail" {
     from = "chaos-email@gmail.com" #email notification only works with gmail, set up GMAIL_APP_TOKEN
     emails = ["customers-dev@gmail.com", "customer-qa@gmail.com"] # distribution lists to dev and qa team
     body = "chaos experiment running, to check dev teams and get latency in qa"
