@@ -5,6 +5,8 @@ with declarative code and run chaos experiments in your cloud infrastructure. Al
 
 ***If you want to perform chaos experiments as code in your infrastructure, but do not have monitoring, IaC, automated CI/CD or an easy way to recover, then sorry, CHAOS ENGINEERING IS NOT FOR YOU***
 
+
+## Usage 
 go-chaos read chaos experiments in HCL format.
 
 Create a directory in you computer
@@ -55,7 +57,8 @@ job "aws" "s3" {
 
 go-chaos limits itself with the use of config options on each job: 
 * region:  will not destroy or delete anything on other cloud regions.
-* namespace: limits the blast radius to a single namespace (for K8s only).
+* namespace: limits the blast radius to a single namespace, for K8s only.
+* project: Select a single project, for gcp only.
 * tag:     single tag, that will find the specified resources and kill those. 
 * count:   Option to limit the number of resources that go-chaos will destroy. 
 
@@ -88,6 +91,29 @@ stop
 ```
 terminate
 delete_content
+```
+
+## DigitalOcean
+* Droplets:
+```
+terminate
+stop
+poweroff
+reboot
+```
+
+*load_balancer
+```
+removeDroplets
+removeRules
+```
+
+## GCP
+* vms:
+```
+terminate
+stop
+reset
 ```
 
 ## K8s
