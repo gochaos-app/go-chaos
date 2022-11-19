@@ -102,7 +102,7 @@ poweroff
 reboot
 ```
 
-*load_balancer
+* load_balancer
 ```
 removeDroplets
 removeRules
@@ -127,17 +127,28 @@ terminateAll
 * Deployments:
 ```
 terminate
+update
 ```
 
-go-chaos can also execute a single script at the beginning of the file
+* DaemonSet:
+```
+terminate
+```
+
+go-chaos can also execute a single script at the end of the file
 ```
 script {
     executor   = "bash"
     source     = "destroy.sh"
 }
+
 ```
 
+go-chaos can send notifications based on gmail with a GMAIL_APP_TOKEN environment variable.
 
+## LICENSE
+
+[GNU GPLv2](https://www.gnu.org/licenses/gpl-2.0.html)
 
 ## Roadmap and news
 
@@ -146,7 +157,7 @@ go-chaos has been in development for quite sometime, there are some important mo
 * Go 1.18.5, instead of 1.14 or 1.16.
 * aws-sdk-go-v2 instead of v1. 
 * Entirely new code base. 
-* Same interface to all functions.
+* Same "interface" to all functions.
 * Remove conditions in favor of a simple hashmap for events. 
 
 ### Rules: 
