@@ -5,15 +5,15 @@ import (
 	"log"
 	"os"
 
-	"github.com/mental12345/go-chaos/cmd"
-	"github.com/mental12345/go-chaos/server"
+	"github.com/gochaos-app/go-chaos/cmd"
+	"github.com/gochaos-app/go-chaos/server"
 	"github.com/urfave/cli"
 )
 
 func main() {
 	app := &cli.App{
 		Name:  "go-chaos",
-		Usage: "A terminal based app that injects chaos into your cloud infrastrucure",
+		Usage: "a terminal based app that injects chaos into your cloud infrastrucure",
 		Commands: []cli.Command{
 			{
 				Name:    "destroy",

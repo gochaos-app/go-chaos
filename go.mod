@@ -1,4 +1,4 @@
-module github.com/mental12345/go-chaos
+module github.com/gochaos-app/go-chaos
 
 go 1.18
 

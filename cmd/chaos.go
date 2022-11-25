@@ -3,12 +3,12 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/mental12345/go-chaos/notifications"
-	"github.com/mental12345/go-chaos/svc/aws"
-	"github.com/mental12345/go-chaos/svc/do"
-	"github.com/mental12345/go-chaos/svc/gcp"
-	"github.com/mental12345/go-chaos/svc/k8s"
-	"github.com/mental12345/go-chaos/svc/scripts"
+	"github.com/gochaos-app/go-chaos/notifications"
+	"github.com/gochaos-app/go-chaos/svc/aws"
+	"github.com/gochaos-app/go-chaos/svc/do"
+	"github.com/gochaos-app/go-chaos/svc/gcp"
+	"github.com/gochaos-app/go-chaos/svc/k8s"
+	"github.com/gochaos-app/go-chaos/svc/scripts"
 )
 
 func switchService(job JobConfig) {

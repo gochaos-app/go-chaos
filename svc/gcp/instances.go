@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	compute "cloud.google.com/go/compute/apiv1"
-	"github.com/mental12345/go-chaos/ops"
+	"github.com/gochaos-app/go-chaos/ops"
 	"google.golang.org/api/iterator"
 
 	computepb "google.golang.org/genproto/googleapis/cloud/compute/v1"

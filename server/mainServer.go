@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/mental12345/go-chaos/cmd"
+	"github.com/gochaos-app/go-chaos/cmd"
 )
 
 func getroot(w http.ResponseWriter, r *http.Request) {
