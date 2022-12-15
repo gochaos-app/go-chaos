@@ -15,7 +15,7 @@ type chaosS3fn func([]string, int, *s3.Client)
 func s3Fn(sess aws.Config, tag string, chaos string, number int) {
 	svc := s3.NewFromConfig(sess)
 
-	if number == 0 {
+	if number <= 0 {
 		log.Println("Will not destroy any S3")
 		return
 	}

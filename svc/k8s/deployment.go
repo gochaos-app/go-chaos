@@ -54,7 +54,7 @@ func deploymentFn(namespace string, tag string, chaos string, number int) {
 
 func terminateDeploymentFn(deploymentList []string, namespace string, tags string, number int, client *kubernetes.Clientset) {
 
-	if number == 0 {
+	if number <= 0 {
 		log.Println("Will not perform chaos on any deployment")
 		return
 	}
@@ -82,7 +82,10 @@ func updateDeploymentFn(deploymentList []string, namespace string, tags string, 
 		log.Println("Chaos not permitted, when updating only one deployment with specified labels should exist, deployments found:", len(deploymentList))
 		return
 	}
-
+	if number < 0 {
+		log.Println("Cannot update to negative number")
+		return
+	}
 	deploymentsClient := client.AppsV1().Deployments(namespace)
 	deployment := deploymentList[0]
 

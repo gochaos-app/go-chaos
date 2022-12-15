@@ -14,7 +14,7 @@ type chaosLambdafn func([]string, int, *lambda.Client)
 
 func lambdaFn(sess aws.Config, tag string, chaos string, number int) {
 	svc := lambda.NewFromConfig(sess)
-	if number == 0 {
+	if number <= 0 {
 		log.Println("Will not destroy any Lambda")
 		return
 	}

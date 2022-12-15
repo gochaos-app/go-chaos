@@ -19,7 +19,7 @@ func DigitalOceanChaos(region string, service string, tag string, chaos string, 
 	//logs from token to digital ocean
 	client := godo.NewFromToken(token)
 
-	if number == 0 {
+	if number <= 0 {
 		log.Println("Will not destroy any digital ocean resource")
 		return
 	}

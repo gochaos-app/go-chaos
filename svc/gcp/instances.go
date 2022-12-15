@@ -15,7 +15,7 @@ import (
 type chaosVMfn func([]string, string, string, int, *compute.InstancesClient)
 
 func instanceFn(project string, region string, tag string, chaos string, number int) {
-	if number == 0 {
+	if number <= 0 {
 		log.Println("Will not destroy any VM")
 		return
 	}

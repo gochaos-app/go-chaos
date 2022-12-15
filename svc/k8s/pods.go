@@ -14,7 +14,7 @@ type chaosPodfn func([]string, string, string, *kubernetes.Clientset)
 
 func podFn(namespace string, tag string, chaos string, number int) {
 	//Checking if go-chaos needs to do anything
-	if number == 0 {
+	if number <= 0 {
 		log.Println("Will not destroy any Pod")
 		return
 	}

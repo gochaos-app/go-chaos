@@ -16,7 +16,7 @@ type chaosEC2fn func([]string, int, *ec2.Client)
 func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 	svc := ec2.NewFromConfig(sess)
 	var key, value string
-	if number == 0 {
+	if number <= 0 {
 		log.Println("Will not destroy any EC2")
 		return
 	}

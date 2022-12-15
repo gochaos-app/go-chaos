@@ -79,6 +79,10 @@ func updateAutoscalingFn(list []string, num int, tag string, session *autoscalin
 }
 
 func terminateAutoScalingFn(list []string, num int, tag string, session *autoscaling.Client) {
+	if num <= 0 {
+		log.Println("Error, when terminate AWS autoscaler, count parameter should be a positive integer")
+		return
+	}
 	if num > len(list) {
 		log.Println("Chaos not permitted", len(list), "autoscaling groups found with", tag, "Number of autoscaling groups to destroy is:", num)
 		return

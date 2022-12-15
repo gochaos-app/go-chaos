@@ -53,7 +53,7 @@ func daemonFn(namespace string, tag string, chaos string, number int) {
 
 func terminateDaemonFn(daemonList []string, namespace string, tags string, number int, client *kubernetes.Clientset) {
 
-	if number == 0 {
+	if number <= 0 {
 		log.Println("Will not perform chaos on any daemonSet")
 		return
 	}
