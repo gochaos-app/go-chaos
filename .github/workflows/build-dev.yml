@@ -1,0 +1,25 @@
+name: "go-chaos build dev"
+on: 
+  push:
+    branches-ignore: 
+      - main
+    
+jobs:
+  build-dev:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: "setup-go"
+        uses: actions/setup-go@v3
+        with:
+          go-version: '^1.18'
+      - run: go version
+        shell: bash
+      - name: "Checkout code"
+        uses: actions/checkout@v3
+      - name: "Run build dev"
+        run: go build -o go-chaos .
+        shell: bash
+      - uses: actions/upload-artifact@v3
+        with:
+          name: go-chaos-linux
+          path: go-chaos
