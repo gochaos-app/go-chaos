@@ -19,3 +19,7 @@ jobs:
       - name: "Run build dev"
         run: go build -o go-chaos .
         shell: bash
+      - uses: actions/upload-artifact@v3
+        with:
+          name: go-chaos-linux
+          path: go-chaos
