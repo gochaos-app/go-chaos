@@ -48,7 +48,7 @@ func ServerFn(filename string) {
 					stringError := "error executing chaos:" + err.Error() + "\n"
 					io.WriteString(w, stringError)
 				} else {
-					cmd.ExecuteChaos(cfg)
+					cmd.ExecuteChaos(cfg, false)
 				}
 
 			}

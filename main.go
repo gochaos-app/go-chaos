@@ -30,7 +30,27 @@ func main() {
 					if err != nil {
 						return err
 					}
-					if cmd.ExecuteChaos(cfg) != nil {
+					if cmd.ExecuteChaos(cfg, true) != nil {
+						return err
+					}
+					return nil
+				},
+			},
+			{
+				Name:  "plan",
+				Usage: "Execute a dry run with custom file name",
+				Action: func(c *cli.Context) error {
+					filename := c.Args().Get(0)
+					if _, err := os.Stat(filename); err != nil {
+						err := errors.New("cannot read" + filename + " or doesn't exists")
+						return err
+					}
+					log.Println("Go-Chaos dry run initiated")
+					cfg, err := cmd.LoadConfig(filename)
+					if err != nil {
+						return err
+					}
+					if cmd.ExecuteChaos(cfg, true) != nil {
 						return err
 					}
 					return nil

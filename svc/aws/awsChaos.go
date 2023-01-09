@@ -8,9 +8,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 )
 
-type awsfn func(aws.Config, string, string, int)
+type awsfn func(aws.Config, string, string, int, bool)
 
-func AmazonChaos(region string, service string, tag string, chaos string, number int) {
+func AmazonChaos(region string, service string, tag string, chaos string, number int, dry bool) {
 	//AWS session for each region in the config
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
 
@@ -26,7 +26,7 @@ func AmazonChaos(region string, service string, tag string, chaos string, number
 	}
 
 	if _, servExists := awsMap[service]; servExists {
-		awsMap[service](cfg, tag, chaos, number)
+		awsMap[service](cfg, tag, chaos, number, dry)
 	} else {
 		log.Println("Service not found")
 		return

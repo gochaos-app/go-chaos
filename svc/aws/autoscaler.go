@@ -12,7 +12,7 @@ import (
 
 type chaosAutoscalerfn func([]string, int, string, *autoscaling.Client)
 
-func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
+func autoscalerFn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 	svc := autoscaling.NewFromConfig(sess)
 
 	var key, value string
@@ -37,6 +37,11 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
 
 	for _, r := range result.AutoScalingGroups {
 		autoscalingList = append(autoscalingList, *r.AutoScalingGroupName)
+	}
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on ", number, "of Autoscaling", autoscalingList)
+		return
 	}
 
 	if len(autoscalingList) == 0 {
