@@ -38,14 +38,14 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int, dry boo
 	for _, r := range result.AutoScalingGroups {
 		autoscalingList = append(autoscalingList, *r.AutoScalingGroupName)
 	}
-	if dry == true {
-		log.Println("Dry mode")
-		log.Println("Will apply chaos on ", number, "of Autoscaling", autoscalingList)
-		return
-	}
 
 	if len(autoscalingList) == 0 {
 		log.Println("Chaos not permitted: autoscaling groups not found with tag", tag)
+		return
+	}
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on ", number, "of Autoscaling", autoscalingList)
 		return
 	}
 

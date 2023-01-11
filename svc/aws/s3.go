@@ -30,11 +30,6 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 		bucketList = append(bucketList, *bucket.Name)
 	}
 
-	if dry == true {
-		log.Println("Dry mode")
-		log.Println("Will apply chaos on ", number, "of s3 list", bucketList)
-		return
-	}
 	//Separate tag into key, value components
 	parts := strings.Split(tag, ":")
 	var fixList []string
@@ -57,6 +52,11 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 	}
 	if len(fixList) == 0 {
 		log.Println("Chaos not permitted: Couldn't find a buckets with the characteristics specified in the config file")
+		return
+	}
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on ", number, "of s3 list", bucketList)
 		return
 	}
 

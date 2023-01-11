@@ -43,13 +43,14 @@ func lambdaFn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 			}
 		}
 	}
+
+	if len(arnFunctions) == 0 {
+		log.Println("Chaos not permitted: Couldn't find lambda functions with the characteristics specified in the config file")
+		return
+	}
 	if dry == true {
 		log.Println("Dry mode")
 		log.Println("Will apply chaos on ", number, "of lambda list", arnFunctions)
-		return
-	}
-	if len(arnFunctions) == 0 {
-		log.Println("Chaos not permitted: Couldn't find lambda functions with the characteristics specified in the config file")
 		return
 	}
 	if number > len(arnFunctions) {

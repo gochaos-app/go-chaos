@@ -7,7 +7,7 @@ job "gcp" "vm" {
     config {
         tag = "gcp:hellovm"
         chaos = "terminate"
-        count = 0
+        count = 1
     }
 }
 
@@ -22,20 +22,20 @@ job "aws" "ec2" {
 
 job "do" "droplet" {
     config {
-        tag = "aws:hello" 
+        tag = "hello" 
         chaos = "terminate"    
-        count = 0   
+        count = 1  
     }
 }
 
-#job "kubernetes" "deployment" {
-#    namespace = "default"
-#    config {
-#        tag = "aws:hello" 
-#        chaos = "terminate"    
-#        count = 0   
-#    }
-#}
+job "kubernetes" "deployment" {
+    namespace = "default"
+    config {
+        tag = "app:nginx" 
+        chaos = "terminate"    
+        count = 1   
+    }
+}
 
 #notification "gmail" {
 #    from = "chaos-email@gmail.com" #email notification only works with gmail, set up GMAIL_APP_TOKEN

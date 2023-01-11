@@ -12,12 +12,7 @@ import (
 
 type chaosPodfn func([]string, string, string, *kubernetes.Clientset)
 
-func podFn(namespace string, tag string, chaos string, number int) {
-	//Checking if go-chaos needs to do anything
-	if number <= 0 {
-		log.Println("Will not destroy any Pod")
-		return
-	}
+func podFn(namespace string, tag string, chaos string, number int, dry bool) {
 
 	//Separating tags and adding "="
 	var key, value string
@@ -38,17 +33,36 @@ func podFn(namespace string, tag string, chaos string, number int) {
 		log.Println("Error:", err)
 		return
 	}
+
 	var podList []string
 
 	for _, pod := range list.Items {
 		podList = append(podList, pod.Name)
 	}
 
+	if len(podList) == 0 {
+		log.Println("Could not find any pods with", label)
+		return
+	}
+
+	podList = podList[:number]
+
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on pods", podList)
+		return
+	}
+
+	//Checking if go-chaos needs to do anything
+	if number <= 0 {
+		log.Println("Will not destroy any Pod")
+		return
+	}
+
 	if number > len(podList) {
 		log.Println("Chaos not permitted", len(podList), "pods found with", key, value, "Number of pods to destroy is:", number)
 		return
 	}
-	podList = podList[:number]
 
 	podsMap := map[string]chaosPodfn{
 		"terminate":    terminatePodFn,

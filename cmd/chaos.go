@@ -27,14 +27,16 @@ func switchService(job JobConfig, dry bool) {
 			job.Service,
 			job.Chaos.Tag,
 			job.Chaos.Chaos,
-			job.Chaos.Count)
+			job.Chaos.Count,
+			dry)
 	case "kubernetes":
 		k8s.KubernetesChaos(
 			job.Namespace,
 			job.Service,
 			job.Chaos.Tag,
 			job.Chaos.Chaos,
-			job.Chaos.Count)
+			job.Chaos.Count,
+			dry)
 	case "gcp":
 		gcp.GoogleChaos(
 			job.Region,
@@ -42,7 +44,8 @@ func switchService(job JobConfig, dry bool) {
 			job.Service,
 			job.Chaos.Tag,
 			job.Chaos.Chaos,
-			job.Chaos.Count)
+			job.Chaos.Count,
+			dry)
 	case "":
 		fmt.Println("I dont know what to do")
 	default:

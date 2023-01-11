@@ -10,7 +10,7 @@ import (
 
 type chaosLoadBalancerFn func(string, string, int, *godo.Client)
 
-func LoadBalancerFn(config *godo.Client, tag string, chaos string, number int) {
+func LoadBalancerFn(config *godo.Client, tag string, chaos string, number int, dry bool) {
 	loadBalancerList, _, err := config.LoadBalancers.List(context.TODO(), &godo.ListOptions{})
 
 	if err != nil {
@@ -28,6 +28,16 @@ func LoadBalancerFn(config *godo.Client, tag string, chaos string, number int) {
 		log.Println("Couldn't find the load balancer")
 		return
 	}
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on LoadBalancer ", lbName)
+		return
+	}
+	if number <= 0 {
+		log.Println("Will not destroy any load balancer resource")
+		return
+	}
+
 	LbMap := map[string]chaosLoadBalancerFn{
 		"removeDroplets": removeDropletsFn,
 		"removeRules":    removeRulesFn,

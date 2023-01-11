@@ -16,9 +16,8 @@ func main() {
 		Usage: "a terminal based app that injects chaos into your cloud infrastrucure",
 		Commands: []cli.Command{
 			{
-				Name:    "destroy",
-				Aliases: []string{"d"},
-				Usage:   "Execute destroy with custom file name",
+				Name:  "destroy",
+				Usage: "Execute destroy with custom file name",
 				Action: func(c *cli.Context) error {
 					filename := c.Args().Get(0)
 					if _, err := os.Stat(filename); err != nil {
@@ -30,7 +29,7 @@ func main() {
 					if err != nil {
 						return err
 					}
-					if cmd.ExecuteChaos(cfg, true) != nil {
+					if cmd.ExecuteChaos(cfg, false) != nil {
 						return err
 					}
 					return nil
@@ -57,9 +56,8 @@ func main() {
 				},
 			},
 			{
-				Name:    "validate",
-				Aliases: []string{"v"},
-				Usage:   "Validate chaos file",
+				Name:  "validate",
+				Usage: "Validate chaos file",
 				Action: func(c *cli.Context) error {
 					filename := c.Args().Get(0)
 					if _, err := os.Stat(filename); err != nil {
@@ -72,9 +70,8 @@ func main() {
 				},
 			},
 			{
-				Name:    "target",
-				Aliases: []string{"t"},
-				Usage:   "Execute chaos on a single target",
+				Name:  "target",
+				Usage: "Execute chaos on a single target",
 				Action: func(c *cli.Context) error {
 					file := c.Args().Get(0)
 					target := c.Args().Get(1)
@@ -83,9 +80,8 @@ func main() {
 				},
 			},
 			{
-				Name:    "server",
-				Aliases: []string{"s"},
-				Usage:   "Start go-chaos server",
+				Name:  "server",
+				Usage: "Start go-chaos server",
 				Action: func(c *cli.Context) error {
 					filename := c.Args().Get(0)
 					log.Println("Server initiated")
