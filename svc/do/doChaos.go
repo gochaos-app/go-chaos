@@ -7,9 +7,9 @@ import (
 	"github.com/digitalocean/godo"
 )
 
-type dofn func(*godo.Client, string, string, int)
+type dofn func(*godo.Client, string, string, int, bool)
 
-func DigitalOceanChaos(region string, service string, tag string, chaos string, number int) {
+func DigitalOceanChaos(region string, service string, tag string, chaos string, number int, dry bool) {
 	// Check for environment variable
 	token := os.Getenv("DIGITALOCEAN_TOKEN")
 	if len(token) == 0 {
@@ -19,17 +19,12 @@ func DigitalOceanChaos(region string, service string, tag string, chaos string, 
 	//logs from token to digital ocean
 	client := godo.NewFromToken(token)
 
-	if number <= 0 {
-		log.Println("Will not destroy any digital ocean resource")
-		return
-	}
-
 	doMap := map[string]dofn{
 		"droplet":       DropletFn,
 		"load_balancer": LoadBalancerFn,
 	}
 	if _, servExists := doMap[service]; servExists {
-		doMap[service](client, tag, chaos, number)
+		doMap[service](client, tag, chaos, number, dry)
 	} else {
 		log.Println("Service not found")
 		return

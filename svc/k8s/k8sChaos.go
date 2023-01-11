@@ -10,7 +10,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-type k8sfn func(string, string, string, int)
+type k8sfn func(string, string, string, int, bool)
 
 func K8sConfig() (*kubernetes.Clientset, error) {
 	defaultCfg := filepath.Join(os.Getenv("HOME"), ".kube", "config")
@@ -29,14 +29,14 @@ func K8sConfig() (*kubernetes.Clientset, error) {
 	return clientset, nil
 }
 
-func KubernetesChaos(namespace string, service string, tag string, chaos string, number int) {
+func KubernetesChaos(namespace string, service string, tag string, chaos string, number int, dry bool) {
 	k8sMap := map[string]k8sfn{
 		"pod":        podFn,
 		"deployment": deploymentFn,
 		"daemonSet":  daemonFn,
 	}
 	if _, servExists := k8sMap[service]; servExists {
-		k8sMap[service](namespace, tag, chaos, number)
+		k8sMap[service](namespace, tag, chaos, number, dry)
 	} else {
 		log.Println("Service not found")
 		return

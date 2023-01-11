@@ -12,7 +12,7 @@ import (
 
 type chaosDeploymentfn func([]string, string, string, int, *kubernetes.Clientset)
 
-func deploymentFn(namespace string, tag string, chaos string, number int) {
+func deploymentFn(namespace string, tag string, chaos string, number int, dry bool) {
 
 	//Separating tags and adding "="
 	var key, value string
@@ -38,6 +38,17 @@ func deploymentFn(namespace string, tag string, chaos string, number int) {
 
 	for _, deployment := range list.Items {
 		deploymentList = append(deploymentList, deployment.Name)
+	}
+
+	if len(deploymentList) == 0 {
+		log.Println("Could not find any deployment with", label)
+		return
+	}
+
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on deployments", deploymentList)
+		return
 	}
 
 	deploymentsMap := map[string]chaosDeploymentfn{

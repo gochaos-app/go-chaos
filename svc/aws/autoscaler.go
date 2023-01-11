@@ -12,7 +12,7 @@ import (
 
 type chaosAutoscalerfn func([]string, int, string, *autoscaling.Client)
 
-func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
+func autoscalerFn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 	svc := autoscaling.NewFromConfig(sess)
 
 	var key, value string
@@ -41,6 +41,11 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int) {
 
 	if len(autoscalingList) == 0 {
 		log.Println("Chaos not permitted: autoscaling groups not found with tag", tag)
+		return
+	}
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on ", number, "of Autoscaling", autoscalingList)
 		return
 	}
 

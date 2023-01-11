@@ -10,7 +10,7 @@ import (
 
 type chaosDropletFn func([]int, int, *godo.Client)
 
-func DropletFn(config *godo.Client, tag string, chaos string, number int) {
+func DropletFn(config *godo.Client, tag string, chaos string, number int, dry bool) {
 	droplets, _, err := config.Droplets.ListByTag(context.TODO(), tag, &godo.ListOptions{})
 	if err != nil {
 		log.Println("error listing droplets:", err)
@@ -18,10 +18,29 @@ func DropletFn(config *godo.Client, tag string, chaos string, number int) {
 	}
 
 	var DropletsInstances []int
+	var DropletsNames []string
 
 	for _, droplet := range droplets {
 		DropletsInstances = append(DropletsInstances, droplet.ID)
+		DropletsNames = append(DropletsNames, droplet.Name)
 	}
+
+	if len(DropletsInstances) == 0 {
+		log.Println("Could not find any droplet with: ", tag)
+		return
+	}
+
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on ", number, "of Droplets list", DropletsNames)
+		return
+	}
+
+	if number <= 0 {
+		log.Println("Will not destroy any droplet resource")
+		return
+	}
+
 	if len(DropletsInstances) >= number {
 		log.Println("Droplet Chaos permitted...")
 	} else {

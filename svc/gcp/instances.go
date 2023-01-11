@@ -14,11 +14,8 @@ import (
 
 type chaosVMfn func([]string, string, string, int, *compute.InstancesClient)
 
-func instanceFn(project string, region string, tag string, chaos string, number int) {
-	if number <= 0 {
-		log.Println("Will not destroy any VM")
-		return
-	}
+func instanceFn(project string, region string, tag string, chaos string, number int, dry bool) {
+
 	// Separate tag string into key value components
 	parts := strings.Split(tag, ":")
 	var key, value string
@@ -62,6 +59,16 @@ func instanceFn(project string, region string, tag string, chaos string, number 
 			}
 		}
 	}
+	if len(vms) == 0 {
+		log.Println("Could not find any gcp vm with", tag)
+		return
+	}
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on ", vms)
+		return
+	}
+
 	if len(vms) >= number {
 		log.Println("GCP VM Chaos permitted...")
 	} else {
@@ -84,6 +91,10 @@ func instanceFn(project string, region string, tag string, chaos string, number 
 
 func terminateVMFn(vmList []string, zone string, project string, number int, cfg *compute.InstancesClient) {
 	ctx := context.Background()
+	if number <= 0 {
+		log.Println("Will not destroy any VM")
+		return
+	}
 
 	vmList = vmList[:number]
 	for _, vm := range vmList {

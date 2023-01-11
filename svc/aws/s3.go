@@ -12,7 +12,7 @@ import (
 
 type chaosS3fn func([]string, int, *s3.Client)
 
-func s3Fn(sess aws.Config, tag string, chaos string, number int) {
+func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 	svc := s3.NewFromConfig(sess)
 
 	if number <= 0 {
@@ -52,6 +52,11 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int) {
 	}
 	if len(fixList) == 0 {
 		log.Println("Chaos not permitted: Couldn't find a buckets with the characteristics specified in the config file")
+		return
+	}
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on ", number, "of s3 list", bucketList)
 		return
 	}
 

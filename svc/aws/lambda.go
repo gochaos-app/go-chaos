@@ -12,7 +12,7 @@ import (
 
 type chaosLambdafn func([]string, int, *lambda.Client)
 
-func lambdaFn(sess aws.Config, tag string, chaos string, number int) {
+func lambdaFn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 	svc := lambda.NewFromConfig(sess)
 	if number <= 0 {
 		log.Println("Will not destroy any Lambda")
@@ -43,8 +43,14 @@ func lambdaFn(sess aws.Config, tag string, chaos string, number int) {
 			}
 		}
 	}
+
 	if len(arnFunctions) == 0 {
 		log.Println("Chaos not permitted: Couldn't find lambda functions with the characteristics specified in the config file")
+		return
+	}
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on ", number, "of lambda list", arnFunctions)
 		return
 	}
 	if number > len(arnFunctions) {

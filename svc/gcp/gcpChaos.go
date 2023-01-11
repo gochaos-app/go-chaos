@@ -10,9 +10,9 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-type gcpfn func(string, string, string, string, int)
+type gcpfn func(string, string, string, string, int, bool)
 
-func GoogleChaos(region string, project string, service string, tag string, chaos string, number int) {
+func GoogleChaos(region string, project string, service string, tag string, chaos string, number int, dry bool) {
 	//search for project, if it doesn't exists return and print and error
 	ctx := context.Background()
 	c, err := resourcemanager.NewProjectsClient(ctx)
@@ -46,7 +46,7 @@ func GoogleChaos(region string, project string, service string, tag string, chao
 	}
 
 	if _, servExists := gcpMap[service]; servExists {
-		gcpMap[service](project, region, tag, chaos, number)
+		gcpMap[service](project, region, tag, chaos, number, dry)
 	} else {
 		log.Println("Service not found")
 		return

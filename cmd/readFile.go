@@ -50,7 +50,7 @@ func ExecuteTarget(file string, target string) (*GenConfig, error) {
 
 	for j := 0; j < len(cfg.Job); j++ {
 		if cfg.Job[j].Cloud == cloud && cfg.Job[j].Service == service && cfg.Job[j].Chaos.Tag == tag {
-			switchService(cfg.Job[j])
+			switchService(cfg.Job[j], false)
 			break
 		}
 	}

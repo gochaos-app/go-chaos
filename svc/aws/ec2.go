@@ -13,13 +13,10 @@ import (
 
 type chaosEC2fn func([]string, int, *ec2.Client)
 
-func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
+func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 	svc := ec2.NewFromConfig(sess)
 	var key, value string
-	if number <= 0 {
-		log.Println("Will not destroy any EC2")
-		return
-	}
+
 	parts := strings.Split(tag, ":")
 	key = "tag:" + parts[0]
 	value = parts[1]
@@ -46,6 +43,19 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int) {
 		}
 	}
 
+	if number <= 0 {
+		log.Println("Will not destroy any EC2")
+		return
+	}
+	if len(EC2instances) == 0 {
+		log.Println("Could not find any instance with: ", tag)
+		return
+	}
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on ", number, "of EC2 list", EC2instances)
+		return
+	}
 	if len(EC2instances) >= number {
 		log.Println("EC2 Chaos permitted...")
 	} else {

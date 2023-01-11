@@ -12,7 +12,7 @@ import (
 
 type chaosDaemonfn func([]string, string, string, int, *kubernetes.Clientset)
 
-func daemonFn(namespace string, tag string, chaos string, number int) {
+func daemonFn(namespace string, tag string, chaos string, number int, dry bool) {
 
 	//Separating tags and adding "="
 	var key, value string
@@ -38,6 +38,16 @@ func daemonFn(namespace string, tag string, chaos string, number int) {
 
 	for _, daemonSet := range list.Items {
 		daemonList = append(daemonList, daemonSet.Name)
+	}
+	if len(daemonList) == 0 {
+		log.Println("Could not find any daemonSet with", label)
+		return
+	}
+
+	if dry == true {
+		log.Println("Dry mode")
+		log.Println("Will apply chaos on daemonSets ", daemonList)
+		return
 	}
 
 	daemonsMap := map[string]chaosDaemonfn{
