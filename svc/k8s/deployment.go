@@ -56,7 +56,7 @@ func deploymentFn(namespace string, tag string, chaos string, number int, dry bo
 		"update":    updateDeploymentFn,
 	}
 	if _, servExists := deploymentsMap[chaos]; servExists {
-		deploymentsMap[chaos](ops.Random(deploymentList), namespace, label, number, clientset)
+		deploymentsMap[chaos](ops.RandomArray(deploymentList), namespace, label, number, clientset)
 	} else {
 		log.Println("Chaos not found")
 		return

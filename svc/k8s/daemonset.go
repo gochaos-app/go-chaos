@@ -54,7 +54,7 @@ func daemonFn(namespace string, tag string, chaos string, number int, dry bool) 
 		"terminate": terminateDaemonFn,
 	}
 	if _, servExists := daemonsMap[chaos]; servExists {
-		daemonsMap[chaos](ops.Random(daemonList), namespace, label, number, clientset)
+		daemonsMap[chaos](ops.RandomArray(daemonList), namespace, label, number, clientset)
 	} else {
 		log.Println("Chaos not found")
 		return

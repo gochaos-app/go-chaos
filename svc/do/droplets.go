@@ -55,7 +55,7 @@ func DropletFn(config *godo.Client, tag string, chaos string, number int, dry bo
 	}
 
 	if _, servExists := DropletMap[chaos]; servExists {
-		DropletMap[chaos](ops.Random(DropletsInstances), number, config)
+		DropletMap[chaos](ops.RandomArray(DropletsInstances), number, config)
 	} else {
 		log.Println("Chaos not found")
 		return

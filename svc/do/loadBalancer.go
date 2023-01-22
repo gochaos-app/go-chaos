@@ -90,7 +90,7 @@ func removeDropletsFn(id string, name string, number int, client *godo.Client) {
 		log.Println("Cannot remove from load balancer, existing droplets in load balancer:", len(LoadBalancers.DropletIDs))
 		return
 	}
-	dropletsIDs := ops.Random(LoadBalancers.DropletIDs)
+	dropletsIDs := ops.RandomArray(LoadBalancers.DropletIDs)
 	dropletsIDs = dropletsIDs[:number]
 	_, err = client.LoadBalancers.RemoveDroplets(context.TODO(), id, dropletsIDs...)
 	if err != nil {

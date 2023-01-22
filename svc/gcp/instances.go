@@ -82,7 +82,7 @@ func instanceFn(project string, region string, tag string, chaos string, number 
 		"reset":     restartVMFn,
 	}
 	if _, servExists := vmsMap[chaos]; servExists {
-		vmsMap[chaos](ops.Random(vms), region, project, number, instanceClient)
+		vmsMap[chaos](ops.RandomArray(vms), region, project, number, instanceClient)
 	} else {
 		log.Println("Chaos not found")
 		return

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gochaos-app/go-chaos/notifications"
 	"github.com/gochaos-app/go-chaos/svc/aws"
@@ -47,13 +48,26 @@ func switchService(job JobConfig, dry bool) {
 			job.Chaos.Count,
 			dry)
 	case "":
-		fmt.Println("I dont know what to do")
+		log.Println("I dont know what to do")
 	default:
-		fmt.Println("I dont understand the service to execute chaos on")
+		log.Println("I dont understand the service to execute chaos on")
 	}
 }
 
+func selectFunction(cfg *GenConfig) []JobConfig {
+	switch cfg.Function {
+	case "random":
+		return randomJobs(cfg.Job)
+	case "sequential":
+		return cfg.Job
+	case "":
+		return cfg.Job
+	}
+	return nil
+}
+
 func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
+	selectFunction(cfg)
 	for i := 0; i < len(cfg.Job); i++ {
 		switchService(cfg.Job[i], dryFlag)
 	}
