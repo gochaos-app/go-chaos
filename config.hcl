@@ -1,6 +1,6 @@
 app = "TestingApp"
 description = "this is a test" 
-function = "random"
+#function = "random"
 job "gcp" "vm" {
     project = "go-chaos"
     region = "us-central1-a"
