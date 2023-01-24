@@ -3,6 +3,7 @@ package cmd
 type GenConfig struct {
 	App           string        `hcl:"app"`
 	Description   string        `hcl:"description"`
+	Function      string        `hcl:"function,optional"`
 	Job           []JobConfig   `hcl:"job,block"`
 	Script        *ScriptConfig `hcl:"script,block"`
 	Notifications []NotifConfig `hcl:"notification,block"`

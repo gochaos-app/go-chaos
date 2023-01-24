@@ -63,7 +63,7 @@ func lambdaFn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 		"stop":      stopLambdaFn,
 	}
 	if _, servExists := lambdaMap[chaos]; servExists {
-		lambdaMap[chaos](ops.Random(arnFunctions), number, svc)
+		lambdaMap[chaos](ops.RandomArray(arnFunctions), number, svc)
 	} else {
 		log.Println("Chaos not found")
 		return

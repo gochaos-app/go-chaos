@@ -65,7 +65,7 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 		"delete_content": deletectnS3Fn,
 	}
 	if _, servExists := s3Map[chaos]; servExists {
-		s3Map[chaos](ops.Random(fixList), number, svc)
+		s3Map[chaos](ops.RandomArray(fixList), number, svc)
 	} else {
 		log.Println("Chaos not found")
 		return

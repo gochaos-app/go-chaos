@@ -69,7 +69,7 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 		"reboot":    rebootEC2Fn,
 	}
 	if _, servExists := ec2Map[chaos]; servExists {
-		ec2Map[chaos](ops.Random(EC2instances), number, svc)
+		ec2Map[chaos](ops.RandomArray(EC2instances), number, svc)
 	} else {
 		log.Println("Chaos not found")
 		return
