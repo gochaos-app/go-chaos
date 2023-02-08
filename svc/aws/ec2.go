@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+	"errors"
 	"log"
 	"strings"
 
@@ -11,9 +12,9 @@ import (
 	"github.com/gochaos-app/go-chaos/ops"
 )
 
-type chaosEC2fn func([]string, int, *ec2.Client)
+type chaosEC2fn func([]string, int, *ec2.Client) error
 
-func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
+func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) error {
 	svc := ec2.NewFromConfig(sess)
 	var key, value string
 
@@ -33,9 +34,9 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 		},
 	})
 	if err != nil {
-		log.Panicln("Got an error retrieving information about your Amazon EC2 instances:", err)
-		return
+		return err
 	}
+
 	var EC2instances []string
 	for _, r := range result.Reservations {
 		for _, i := range r.Instances {
@@ -43,24 +44,25 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 		}
 	}
 
+	// FIXME: Implement a better way to handle below logic
 	if number <= 0 {
-		log.Println("Will not destroy any EC2")
-		return
+		err := errors.New("Will not destroy any EC2")
+		return err
 	}
 	if len(EC2instances) == 0 {
-		log.Println("Could not find any instance with: ", tag)
-		return
+		err := errors.New("Could not find any instance with provided tag")
+		return err
 	}
 	if dry == true {
 		log.Println("Dry mode")
 		log.Println("Will apply chaos on ", number, "of EC2 list", EC2instances)
-		return
+		return nil
 	}
 	if len(EC2instances) >= number {
 		log.Println("EC2 Chaos permitted...")
 	} else {
-		log.Println("Chaos not permitted", len(EC2instances), "instances found with", key, value, "Number of instances to destroy is:", number)
-		return
+		err := errors.New("Chaos not permitted: Number of instances to destroy is greater than instances found with provided tag")
+		return err
 	}
 
 	ec2Map := map[string]chaosEC2fn{
@@ -71,13 +73,14 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 	if _, servExists := ec2Map[chaos]; servExists {
 		ec2Map[chaos](ops.RandomArray(EC2instances), number, svc)
 	} else {
-		log.Println("Chaos not found")
-		return
+		err := errors.New("Chaos not found")
+		return err
 	}
 
+	return nil
 }
 
-func rebootEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
+func rebootEC2Fn(instances []string, num2Kill int, session *ec2.Client) error {
 	input := &ec2.RebootInstancesInput{
 		InstanceIds: []string{},
 	}
@@ -90,12 +93,13 @@ func rebootEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	_, err := session.RebootInstances(context.TODO(), input)
 	if err != nil {
-		log.Panicln("Error rebooting instances:", err)
+		return err
 	}
+
+	return nil
 }
 
-func stopEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
-
+func stopEC2Fn(instances []string, num2Kill int, session *ec2.Client) error {
 	input := &ec2.StopInstancesInput{
 		InstanceIds: []string{},
 	}
@@ -108,12 +112,13 @@ func stopEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	_, err := session.StopInstances(context.TODO(), input)
 	if err != nil {
-		log.Println("Error stopping instances:", err)
+		return err
 	}
+
+	return nil
 }
 
-func terminateEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
-
+func terminateEC2Fn(instances []string, num2Kill int, session *ec2.Client) error {
 	input := &ec2.TerminateInstancesInput{
 		InstanceIds: []string{},
 	}
@@ -126,6 +131,8 @@ func terminateEC2Fn(instances []string, num2Kill int, session *ec2.Client) {
 
 	_, err := session.TerminateInstances(context.TODO(), input)
 	if err != nil {
-		log.Println("Error terminating instances:", err)
+		return err
 	}
+
+	return nil
 }

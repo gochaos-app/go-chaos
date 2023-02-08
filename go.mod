@@ -3,6 +3,7 @@ module github.com/gochaos-app/go-chaos
 go 1.18
 
 require (
+	cloud.google.com/go/compute v1.10.0
 	cloud.google.com/go/resourcemanager v1.3.0
 	github.com/BurntSushi/toml v0.3.1
 	github.com/aws/aws-sdk-go-v2 v1.16.11
@@ -23,7 +24,6 @@ require (
 
 require (
 	cloud.google.com/go v0.104.0 // indirect
-	cloud.google.com/go/compute v1.10.0 // indirect
 	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect

@@ -8,8 +8,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 )
 
-type awsfn func(aws.Config, string, string, int, bool)
+type awsfn func(aws.Config, string, string, int, bool) error
 
+// FIXME: Make go-chaos capable of handling errors from AmazonChaos
 func AmazonChaos(region string, service string, tag string, chaos string, number int, dry bool) {
 	//AWS session for each region in the config
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))

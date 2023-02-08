@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+	"errors"
 	"log"
 	"strings"
 
@@ -10,20 +11,19 @@ import (
 	"github.com/gochaos-app/go-chaos/ops"
 )
 
-type chaosS3fn func([]string, int, *s3.Client)
+type chaosS3fn func([]string, int, *s3.Client) error
 
-func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
+func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) error {
 	svc := s3.NewFromConfig(sess)
 
 	if number <= 0 {
-		log.Println("Will not destroy any S3")
-		return
+		err := errors.New("Will not destroy any S3")
+		return err
 	}
 
 	s3List, err := svc.ListBuckets(context.TODO(), &s3.ListBucketsInput{})
 	if err != nil {
-		log.Println("An error has occurred: ", err)
-		return
+		return err
 	}
 	var bucketList []string
 	for _, bucket := range s3List.Buckets {
@@ -47,17 +47,17 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 			}
 		}
 	default:
-		log.Println("Chaos not permitted: Please use PREFIX or SUFFIX as tag key")
-		return
+		err := errors.New("Chaos not permitted: Please use PREFIX or SUFFIX as tag key")
+		return err
 	}
 	if len(fixList) == 0 {
-		log.Println("Chaos not permitted: Couldn't find a buckets with the characteristics specified in the config file")
-		return
+		err := errors.New("Chaos not permitted: Couldn't find a buckets with the characteristics specified in the config file")
+		return err
 	}
 	if dry == true {
 		log.Println("Dry mode")
 		log.Println("Will apply chaos on ", number, "of s3 list", bucketList)
-		return
+		return nil
 	}
 
 	s3Map := map[string]chaosS3fn{
@@ -67,17 +67,18 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 	if _, servExists := s3Map[chaos]; servExists {
 		s3Map[chaos](ops.RandomArray(fixList), number, svc)
 	} else {
-		log.Println("Chaos not found")
-		return
+		err := errors.New("Chaos not found")
+		return err
 	}
 
+	return nil
 }
 
-func terminateS3Fn(list []string, number int, session *s3.Client) {
+func terminateS3Fn(list []string, number int, session *s3.Client) error {
 	buckets := len(list)
 	if buckets < number {
-		log.Println("Out of dimension array, trying to delete", number, "buckets.", buckets, "S3 buckets found")
-		return
+		err := errors.New("Out of dimension array, trying to delete more S3 buckets than found")
+		return err
 	}
 	bucketsArray := list[0:number]
 	for _, S3Bucket := range bucketsArray {
@@ -92,8 +93,7 @@ func terminateS3Fn(list []string, number int, session *s3.Client) {
 			}
 			_, err := session.DeleteObject(context.TODO(), input_delete)
 			if err != nil {
-				log.Panicln("Error:", err)
-				return
+				return err
 			}
 		}
 		log.Println("Deleting bucket:", S3Bucket)
@@ -102,13 +102,14 @@ func terminateS3Fn(list []string, number int, session *s3.Client) {
 		}
 		_, s3error := session.DeleteBucket(context.TODO(), input)
 		if s3error != nil {
-			log.Panicln(err)
-			return
+			return err
 		}
 	}
+
+	return nil
 }
 
-func deletectnS3Fn(list []string, number int, session *s3.Client) {
+func deletectnS3Fn(list []string, number int, session *s3.Client) error {
 	for _, S3Bucket := range list {
 		input_list := &s3.ListObjectsV2Input{
 			Bucket: aws.String(S3Bucket),
@@ -119,11 +120,11 @@ func deletectnS3Fn(list []string, number int, session *s3.Client) {
 		}
 		objects := len(results.Contents)
 		if objects == 0 {
-			log.Println("No objects in bucket", S3Bucket)
-			return
+			err := errors.New("No objects in to delete bucket")
+			return err
 		} else if objects < number {
-			log.Println("Out of dimension array, trying to delete", number, "objects.", objects, "objects found in bucket:", S3Bucket)
-			return
+			err := errors.New("Out of dimension array, trying to delete more objects than objects found in the bucket")
+			return err
 		}
 		objectsArray := results.Contents[0:number]
 
@@ -135,9 +136,10 @@ func deletectnS3Fn(list []string, number int, session *s3.Client) {
 			}
 			_, err := session.DeleteObject(context.TODO(), input_delete)
 			if err != nil {
-				log.Panicln("Error:", err)
-				return
+				return err
 			}
 		}
 	}
+
+	return nil
 }
