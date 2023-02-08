@@ -20,6 +20,24 @@ job "aws" "ec2" {
     }
 }
 
+job "aws" "ec2" {
+    region = "us-west-2"
+    config {
+        tag = "aws:testchaos"
+        chaos = "terminate"
+        count = 1 
+    }
+}
+
+job "aws" "s3" {
+    region = "eu-central-1"
+    config {
+        tag = "aws:destroyme"
+        chaos = "terminate"
+        count = 1
+    }
+}
+
 job "do" "droplet" {
     config {
         tag = "hello" 
