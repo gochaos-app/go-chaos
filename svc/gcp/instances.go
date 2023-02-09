@@ -2,6 +2,7 @@ package gcp
 
 import (
 	"context"
+	"errors"
 	"log"
 	"strings"
 
@@ -12,9 +13,9 @@ import (
 	computepb "google.golang.org/genproto/googleapis/cloud/compute/v1"
 )
 
-type chaosVMfn func([]string, string, string, int, *compute.InstancesClient)
+type chaosVMfn func([]string, string, string, int, *compute.InstancesClient) error
 
-func instanceFn(project string, region string, tag string, chaos string, number int, dry bool) {
+func instanceFn(project string, region string, tag string, chaos string, number int, dry bool) error {
 
 	// Separate tag string into key value components
 	parts := strings.Split(tag, ":")
@@ -32,8 +33,8 @@ func instanceFn(project string, region string, tag string, chaos string, number 
 	ctx := context.Background()
 	instanceClient, err := compute.NewInstancesRESTClient(ctx)
 	if err != nil {
-		log.Println("Couldn't get instance list", err)
-		return
+		err := errors.New("Couldn't get instance list")
+		return err
 	}
 	defer instanceClient.Close()
 	req := &computepb.AggregatedListInstancesRequest{
@@ -49,8 +50,7 @@ func instanceFn(project string, region string, tag string, chaos string, number 
 			break
 		}
 		if err != nil {
-			log.Println(err)
-			return
+			return err
 		}
 		instances := pair.Value.Instances
 		if len(instances) > 0 {
@@ -59,21 +59,23 @@ func instanceFn(project string, region string, tag string, chaos string, number 
 			}
 		}
 	}
+
+	// FIXME: Implement a better way to handle below logic
 	if len(vms) == 0 {
-		log.Println("Could not find any gcp vm with", tag)
-		return
+		err := errors.New("Could not find any gcp vm with")
+		return err
 	}
 	if dry == true {
 		log.Println("Dry mode")
 		log.Println("Will apply chaos on ", vms)
-		return
+		return nil
 	}
 
 	if len(vms) >= number {
 		log.Println("GCP VM Chaos permitted...")
 	} else {
-		log.Println("Chaos not permitted", len(vms), "instances found with", key, value, " Number of instances to destroy is:", number)
-		return
+		err := errors.New("Chaos not permitted: instances found is smaller than the number of instances to destroy")
+		return err
 	}
 
 	vmsMap := map[string]chaosVMfn{
@@ -84,16 +86,18 @@ func instanceFn(project string, region string, tag string, chaos string, number 
 	if _, servExists := vmsMap[chaos]; servExists {
 		vmsMap[chaos](ops.RandomArray(vms), region, project, number, instanceClient)
 	} else {
-		log.Println("Chaos not found")
-		return
+		err := errors.New("Chaos not found")
+		return err
 	}
+
+	return nil
 }
 
-func terminateVMFn(vmList []string, zone string, project string, number int, cfg *compute.InstancesClient) {
+func terminateVMFn(vmList []string, zone string, project string, number int, cfg *compute.InstancesClient) error {
 	ctx := context.Background()
 	if number <= 0 {
-		log.Println("Will not destroy any VM")
-		return
+		err := errors.New("Will not destroy any VM")
+		return err
 	}
 
 	vmList = vmList[:number]
@@ -105,19 +109,21 @@ func terminateVMFn(vmList []string, zone string, project string, number int, cfg
 		}
 		op, err := cfg.Delete(ctx, req)
 		if err != nil {
-			log.Println("unable to delete instance: ", err)
-			return
+			err := errors.New("unable to delete instance: ")
+			return err
 		}
 
 		if err = op.Wait(ctx); err != nil {
-			log.Println("unable to wait for the operation:", err)
-			return
+			err := errors.New("unable to wait for the operation:")
+			return err
 		}
 		log.Println("Instance Deleted", vm)
 	}
+
+	return nil
 }
 
-func stopVMFn(vmList []string, zone string, project string, number int, cfg *compute.InstancesClient) {
+func stopVMFn(vmList []string, zone string, project string, number int, cfg *compute.InstancesClient) error {
 	ctx := context.Background()
 
 	vmList = vmList[:number]
@@ -129,19 +135,19 @@ func stopVMFn(vmList []string, zone string, project string, number int, cfg *com
 		}
 		op, err := cfg.Stop(ctx, req)
 		if err != nil {
-			log.Println("unable to stop instance: ", err)
-			return
+			return err
 		}
 
 		if err = op.Wait(ctx); err != nil {
-			log.Println("unable to wait for the operation:", err)
-			return
+			return err
 		}
 		log.Println("Instance Stopped", vm)
 	}
+
+	return nil
 }
 
-func restartVMFn(vmList []string, zone string, project string, number int, cfg *compute.InstancesClient) {
+func restartVMFn(vmList []string, zone string, project string, number int, cfg *compute.InstancesClient) error {
 	ctx := context.Background()
 
 	vmList = vmList[:number]
@@ -153,14 +159,14 @@ func restartVMFn(vmList []string, zone string, project string, number int, cfg *
 		}
 		op, err := cfg.Reset(ctx, req)
 		if err != nil {
-			log.Println("unable to reset instance: ", err)
-			return
+			return err
 		}
 
 		if err = op.Wait(ctx); err != nil {
-			log.Println("unable to wait for the operation:", err)
-			return
+			return err
 		}
 		log.Println("Instance Reset", vm)
 	}
+
+	return nil
 }
