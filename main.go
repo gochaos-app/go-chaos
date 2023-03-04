@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/gochaos-app/go-chaos/cmd"
-	"github.com/gochaos-app/go-chaos/server"
 	"github.com/urfave/cli"
 )
 
@@ -76,16 +75,6 @@ func main() {
 					file := c.Args().Get(0)
 					target := c.Args().Get(1)
 					cmd.ExecuteTarget(file, target)
-					return nil
-				},
-			},
-			{
-				Name:  "server",
-				Usage: "Start go-chaos server",
-				Action: func(c *cli.Context) error {
-					filename := c.Args().Get(0)
-					log.Println("Server initiated")
-					server.ServerFn(filename)
 					return nil
 				},
 			},
