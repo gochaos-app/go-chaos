@@ -1,4 +1,0 @@
-port = "3333"
-remote = "git@github.com:gochaos-app/go-chaos-experiments.git"
-branch = "refs/heads/main"
-path = "/tmp/test"
