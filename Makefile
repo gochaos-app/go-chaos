@@ -1,9 +1,17 @@
+.PHONY : dev prod install compile
+
 dev:
 	echo "Compiling..."
 	go build -o go-chaos . 
+
 prod:
 	echo "Compiling..."
 	go build -ldflags="-s -w" -o go-chaos .
+
+move:
+	mv go-chaos ~/bin/go-chaos
+
+install: prod move
 
 compile:
 	echo "Compiling for every OS and Platform"
