@@ -16,7 +16,7 @@ func ValidateFile(filename string) error {
 		log.Fatalln("Failed to load config", err)
 		return err
 	}
-	log.Println("File readeable, you are good to execute chaos")
+	log.Println("File readable, you are good to execute chaos")
 	return nil
 }
 
