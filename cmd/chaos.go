@@ -9,6 +9,7 @@ import (
 	"github.com/gochaos-app/go-chaos/svc/do"
 	"github.com/gochaos-app/go-chaos/svc/gcp"
 	"github.com/gochaos-app/go-chaos/svc/k8s"
+	"github.com/gochaos-app/go-chaos/svc/module"
 	"github.com/gochaos-app/go-chaos/svc/scripts"
 )
 
@@ -47,6 +48,17 @@ func switchService(job JobConfig, dry bool) {
 			job.Chaos.Chaos,
 			job.Chaos.Count,
 			dry)
+	case "module":
+		module.ModulesChaos(
+			job.Region,
+			job.Service,
+			job.Project,
+			job.Namespace,
+			job.Chaos.Tag,
+			job.Chaos.Chaos,
+			job.Chaos.Count,
+			dry)
+
 	case "":
 		log.Println("I don't know what to do")
 	default:
