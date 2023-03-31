@@ -10,10 +10,10 @@ type GenConfig struct {
 }
 
 type NotifConfig struct {
-	Type      string   `hcl:"type,label"`
-	FromEmail string   `hcl:"from"`
-	ToEmail   []string `hcl:"emails"`
-	Body      string   `hcl:"body"`
+	Type string   `hcl:"type,label"`
+	From string   `hcl:"from,optional"` // Only used for gmail notification
+	To   []string `hcl:"to"`            // Several emails or channels can be specified here
+	Body string   `hcl:"body"`
 }
 
 type JobConfig struct {

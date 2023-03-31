@@ -58,7 +58,6 @@ func switchService(job JobConfig, dry bool) {
 			job.Chaos.Chaos,
 			job.Chaos.Count,
 			dry)
-
 	case "":
 		log.Println("I don't know what to do")
 	default:
@@ -90,7 +89,9 @@ func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
 	for i := 0; i < len(cfg.Notifications); i++ {
 		switch cfg.Notifications[i].Type {
 		case "gmail":
-			notifications.GmailNotification(cfg.Notifications[i].ToEmail, cfg.Notifications[i].Body, cfg.Notifications[i].FromEmail)
+			notifications.GmailNotification(cfg.Notifications[i].To, cfg.Notifications[i].Body, cfg.Notifications[i].From)
+		case "slack":
+			notifications.SlackNotification(cfg.Notifications[i].To, cfg.Notifications[i].Body)
 		case "":
 			fmt.Println("I don't know what to do")
 		default:

@@ -35,7 +35,7 @@ func ModulesChaos(region string, service string, project string, namespace strin
 	}
 	if dry {
 		log.Println("Dry mode")
-		log.Println("Will not execute module")
+		log.Println("Will not execute chaos actions")
 		return
 	}
 	symChaos, err := plug.Lookup("ChaosFunc")

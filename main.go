@@ -12,7 +12,7 @@ import (
 func main() {
 	app := &cli.App{
 		Name:  "go-chaos",
-		Usage: "a terminal based app that injects chaos into your cloud infrastrucure",
+		Usage: "a terminal based app that injects chaos into your cloud infrastructure",
 		Commands: []cli.Command{
 			{
 				Name:  "destroy",
