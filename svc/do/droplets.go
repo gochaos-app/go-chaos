@@ -30,7 +30,7 @@ func DropletFn(config *godo.Client, tag string, chaos string, number int, dry bo
 		return
 	}
 
-	if dry == true {
+	if dry {
 		log.Println("Dry mode")
 		log.Println("Will apply chaos on ", number, "of Droplets list", DropletsNames)
 		return

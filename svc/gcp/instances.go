@@ -63,7 +63,7 @@ func instanceFn(project string, region string, tag string, chaos string, number 
 		log.Println("Could not find any gcp vm with", tag)
 		return
 	}
-	if dry == true {
+	if dry {
 		log.Println("Dry mode")
 		log.Println("Will apply chaos on ", vms)
 		return
