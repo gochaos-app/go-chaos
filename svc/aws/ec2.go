@@ -51,7 +51,7 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 		log.Println("Could not find any instance with: ", tag)
 		return
 	}
-	if dry == true {
+	if dry {
 		log.Println("Dry mode")
 		log.Println("Will apply chaos on ", number, "of EC2 list", EC2instances)
 		return

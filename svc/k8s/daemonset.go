@@ -44,7 +44,7 @@ func daemonFn(namespace string, tag string, chaos string, number int, dry bool) 
 		return
 	}
 
-	if dry == true {
+	if dry {
 		log.Println("Dry mode")
 		log.Println("Will apply chaos on daemonSets ", daemonList)
 		return

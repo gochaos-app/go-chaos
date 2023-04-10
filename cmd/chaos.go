@@ -78,9 +78,9 @@ func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
 	for i := 0; i < len(cfg.Notifications); i++ {
 		switch cfg.Notifications[i].Type {
 		case "gmail":
-			notifications.GmailNotification(cfg.Notifications[i].ToEmail, cfg.Notifications[i].Body, cfg.Notifications[i].FromEmail)
-		case "":
-			fmt.Println("I don't know what to do")
+			notifications.GmailNotification(cfg.Notifications[i].To, cfg.Notifications[i].Body, cfg.Notifications[i].From)
+		case "slack":
+			notifications.SlackNotification(cfg.Notifications[i].To, cfg.Notifications[i].Body)
 		default:
 			fmt.Println("I don't understand the notification")
 		}

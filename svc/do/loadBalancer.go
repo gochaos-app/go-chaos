@@ -28,7 +28,7 @@ func LoadBalancerFn(config *godo.Client, tag string, chaos string, number int, d
 		log.Println("Couldn't find the load balancer")
 		return
 	}
-	if dry == true {
+	if dry {
 		log.Println("Dry mode")
 		log.Println("Will apply chaos on LoadBalancer ", lbName)
 		return
