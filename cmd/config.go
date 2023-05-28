@@ -15,7 +15,7 @@ type Hypothesis struct {
 	Description string `hcl:"description"`
 	Pings       string `hcl:"workers"`
 	Url         string `hcl:"url"`
-	Port        string `hcl:"port,optional"`
+	Report      string `hcl:"report"`
 }
 
 type NotifConfig struct {

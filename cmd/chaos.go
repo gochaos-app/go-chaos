@@ -74,7 +74,7 @@ func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
 	workers, _ := strconv.Atoi(cfg.Hypothesis.Pings)
 	wg.Add(workers)
 	for i := 0; i < workers; i++ {
-		go Ping(cfg.Hypothesis.Url, &wg)
+		go Ping(cfg.Hypothesis.Url, cfg.Hypothesis.Report, &wg)
 	}
 	close(done)
 	selectFunction(cfg)
