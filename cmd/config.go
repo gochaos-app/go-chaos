@@ -6,7 +6,16 @@ type GenConfig struct {
 	Function      string        `hcl:"function,optional"`
 	Job           []JobConfig   `hcl:"job,block"`
 	Script        *ScriptConfig `hcl:"script,block"`
+	Hypothesis    *Hypothesis   `hcl:"hypothesis,block"`
 	Notifications []NotifConfig `hcl:"notification,block"`
+}
+
+type Hypothesis struct {
+	Name        string `hcl:"name"`
+	Description string `hcl:"description"`
+	Pings       string `hcl:"workers"`
+	Url         string `hcl:"url"`
+	Port        string `hcl:"port,optional"`
 }
 
 type NotifConfig struct {
