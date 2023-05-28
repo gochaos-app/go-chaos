@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"os"
 	"sync"
 	"time"
@@ -19,8 +19,17 @@ func Ping(url string, report string, wg *sync.WaitGroup) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	resp, err := client.Do(req)
 
+	reqDump, err := httputil.DumpRequestOut(req, true)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	respDump, err := httputil.DumpResponse(resp, true)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -28,12 +37,10 @@ func Ping(url string, report string, wg *sync.WaitGroup) {
 	defer resp.Body.Close()
 	elapsed := time.Since(start)
 	seconds := elapsed.Seconds()
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	time_test := fmt.Sprintf("Get request took %.3f seconds\n", seconds)
-	test := fmt.Sprintf("Info: %s\n", string(body))
+
+	time_test := fmt.Sprintf("\nTOOK %.3f seconds\n", seconds)
+	request := fmt.Sprintf("REQUEST:\n%s", string(reqDump))
+	response := fmt.Sprintf("RESPONSE\n%s", string(respDump))
 
 	file, _ := os.OpenFile(report, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
@@ -41,7 +48,7 @@ func Ping(url string, report string, wg *sync.WaitGroup) {
 		return
 	}
 	defer file.Close()
-	content := time_test + test
+	content := time_test + request + response
 	_, err = file.WriteString(content)
 	if err != nil {
 		log.Println("Could not write to file")

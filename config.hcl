@@ -8,7 +8,7 @@ hypothesis {
     description = "My hypothesis is that the latency will not go down"
     workers = 10
     url = "http://localhost:8080"
-    report = "testing3.txt"
+    report = "testing.txt"
 
 }
 
