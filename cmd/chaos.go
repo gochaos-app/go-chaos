@@ -68,15 +68,18 @@ func selectFunction(cfg *GenConfig) []JobConfig {
 }
 
 func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
-	done := make(chan struct{})
-
 	var wg sync.WaitGroup
-	workers, _ := strconv.Atoi(cfg.Hypothesis.Pings)
-	wg.Add(workers)
-	for i := 0; i < workers; i++ {
-		go Ping(cfg.Hypothesis.Url, cfg.Hypothesis.Report, &wg)
+
+	if cfg.Hypothesis != nil {
+		done := make(chan struct{})
+		workers, _ := strconv.Atoi(cfg.Hypothesis.Pings)
+		wg.Add(workers)
+		for i := 0; i < workers; i++ {
+			go Ping(cfg.Hypothesis.Url, cfg.Hypothesis.Report, &wg)
+		}
+		close(done)
 	}
-	close(done)
+
 	selectFunction(cfg)
 
 	for i := 0; i < len(cfg.Job); i++ {
