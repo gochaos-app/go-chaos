@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
+	"strconv"
+	"sync"
 
 	"github.com/gochaos-app/go-chaos/notifications"
 	"github.com/gochaos-app/go-chaos/svc/aws"
@@ -67,7 +68,17 @@ func selectFunction(cfg *GenConfig) []JobConfig {
 }
 
 func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
+	done := make(chan struct{})
+
+	var wg sync.WaitGroup
+	workers, _ := strconv.Atoi(cfg.Hypothesis.Pings)
+	wg.Add(workers)
+	for i := 0; i < workers; i++ {
+		go Ping(cfg.Hypothesis.Url, cfg.Hypothesis.Report, &wg)
+	}
+	close(done)
 	selectFunction(cfg)
+
 	for i := 0; i < len(cfg.Job); i++ {
 		switchService(cfg.Job[i], dryFlag)
 	}
@@ -82,8 +93,9 @@ func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
 		case "slack":
 			notifications.SlackNotification(cfg.Notifications[i].To, cfg.Notifications[i].Body)
 		default:
-			fmt.Println("I don't understand the notification")
+			log.Println("I don't understand the notification")
 		}
 	}
+	wg.Wait()
 	return nil
 }
