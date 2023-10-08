@@ -10,8 +10,9 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-type gcpfn func(string, string, string, string, int, bool)
+type gcpfn func(string, string, string, string, int, bool) error
 
+// FIXME: Make go-chaos be able to handle errors from GoogleChaos
 func GoogleChaos(region string, project string, service string, tag string, chaos string, number int, dry bool) {
 	//search for project, if it doesn't exists return and print and error
 	ctx := context.Background()
