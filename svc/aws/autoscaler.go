@@ -3,23 +3,18 @@ package aws
 import (
 	"context"
 	"log"
-	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling"
 	"github.com/aws/aws-sdk-go-v2/service/autoscaling/types"
 )
 
-type chaosAutoscalerfn func([]string, int, string, *autoscaling.Client)
+type chaosAutoscalerfn func([]string, int, *autoscaling.Client)
 
-func autoscalerFn(sess aws.Config, tag string, chaos string, number int, dry bool) {
+func autoscalerFn(sess aws.Config, key string, value string, chaos string, number int, dry bool) {
 	svc := autoscaling.NewFromConfig(sess)
 
-	var key, value string
-
-	parts := strings.Split(tag, ":")
-	key = "tag:" + parts[0]
-	value = parts[1]
+	key = "tag:" + key
 
 	result, err := svc.DescribeAutoScalingGroups(context.TODO(), &autoscaling.DescribeAutoScalingGroupsInput{
 		Filters: []types.Filter{
@@ -40,7 +35,7 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int, dry boo
 	}
 
 	if len(autoscalingList) == 0 {
-		log.Println("Chaos not permitted: autoscaling groups not found with tag", tag)
+		log.Println("Chaos not permitted: autoscaling groups not found with tag", key, value)
 		return
 	}
 	if dry {
@@ -55,17 +50,17 @@ func autoscalerFn(sess aws.Config, tag string, chaos string, number int, dry boo
 		"desired":   addtoAutoscalingFn,
 	}
 	if _, servExists := autoscalingMap[chaos]; servExists {
-		autoscalingMap[chaos](autoscalingList, number, tag, svc)
+		autoscalingMap[chaos](autoscalingList, number, svc)
 	} else {
 		log.Println("chaos not found")
 		return
 	}
 }
 
-func updateAutoscalingFn(list []string, num int, tag string, session *autoscaling.Client) {
+func updateAutoscalingFn(list []string, num int, session *autoscaling.Client) {
 	num32 := int32(num)
 	if len(list) > 1 {
-		log.Println("Found more than one autoscaling groups with tags:", tag)
+		log.Println("Found more than one autoscaling groups with specified tag")
 		return
 	}
 	autoscalingName := list[0]
@@ -83,13 +78,13 @@ func updateAutoscalingFn(list []string, num int, tag string, session *autoscalin
 	}
 }
 
-func terminateAutoScalingFn(list []string, num int, tag string, session *autoscaling.Client) {
+func terminateAutoScalingFn(list []string, num int, session *autoscaling.Client) {
 	if num <= 0 {
 		log.Println("Error, when terminate AWS autoscaler, count parameter should be a positive integer")
 		return
 	}
 	if num > len(list) {
-		log.Println("Chaos not permitted", len(list), "autoscaling groups found with", tag, "Number of autoscaling groups to destroy is:", num)
+		log.Println("Chaos not permitted", len(list), "autoscaling groups found with specified tag. Number of autoscaling groups to destroy is:", num)
 		return
 	}
 	list = list[:num]
@@ -105,9 +100,9 @@ func terminateAutoScalingFn(list []string, num int, tag string, session *autosca
 	}
 }
 
-func addtoAutoscalingFn(list []string, num int, tag string, session *autoscaling.Client) {
+func addtoAutoscalingFn(list []string, num int, session *autoscaling.Client) {
 	if len(list) > 1 {
-		log.Println("Found more than one autoscaling groups with tags:", tag)
+		log.Println("Found more than one autoscaling groups with specified tag")
 		return
 	}
 	num32 := int32(num)

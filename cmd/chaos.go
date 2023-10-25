@@ -48,6 +48,17 @@ func switchService(job JobConfig, dry bool) {
 			job.Chaos.Chaos,
 			job.Chaos.Count,
 			dry)
+	case "script":
+		scripts.ExecuteScript(
+			job.Region,
+			job.Project,
+			job.Service,
+			job.Namespace,
+			job.Chaos.Tag,
+			job.Chaos.Chaos,
+			job.Chaos.Count,
+			dry)
+
 	case "":
 		log.Println("I don't know what to do")
 	default:
@@ -88,10 +99,11 @@ func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
 	// After executing chaos, if there's a script will be executed
 
 	if !dryFlag {
-		if cfg.Script != nil {
-			scripts.ExecuteScript(cfg.Script.Source, cfg.Script.Executor)
-		}
-
+		/*
+			if cfg.Script != nil {
+				scripts.ExecuteScript(cfg.Script.Source, cfg.Script.Executor)
+			}
+		*/
 		for i := 0; i < len(cfg.Notifications); i++ {
 			switch cfg.Notifications[i].Type {
 			case "gmail":
@@ -103,7 +115,7 @@ func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
 			}
 		}
 	} else {
-		log.Println("Dry run, no chaos executed, ignoring notifications and scripts")
+		log.Println("Dry run, no chaos executed, ignoring notifications")
 	}
 
 	close(done)

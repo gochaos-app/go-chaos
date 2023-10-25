@@ -12,7 +12,7 @@ import (
 
 type chaosS3fn func([]string, int, *s3.Client)
 
-func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
+func s3Fn(sess aws.Config, key string, value string, chaos string, number int, dry bool) {
 	svc := s3.NewFromConfig(sess)
 
 	if number <= 0 {
@@ -30,19 +30,17 @@ func s3Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 		bucketList = append(bucketList, *bucket.Name)
 	}
 
-	//Separate tag into key, value components
-	parts := strings.Split(tag, ":")
 	var fixList []string
-	switch parts[0] {
+	switch key {
 	case "SUFFIX":
 		for _, name := range bucketList {
-			if strings.HasSuffix(name, parts[1]) {
+			if strings.HasSuffix(name, value) {
 				fixList = append(fixList, name)
 			}
 		}
 	case "PREFIX":
 		for _, name := range bucketList {
-			if strings.HasPrefix(name, parts[1]) {
+			if strings.HasPrefix(name, value) {
 				fixList = append(fixList, name)
 			}
 		}
