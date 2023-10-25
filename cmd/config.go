@@ -5,7 +5,6 @@ type GenConfig struct {
 	Description   string        `hcl:"description"`
 	Function      string        `hcl:"function,optional"`
 	Job           []JobConfig   `hcl:"job,block"`
-	Script        *ScriptConfig `hcl:"script,block"`
 	Hypothesis    *Hypothesis   `hcl:"hypothesis,block"`
 	Notifications []NotifConfig `hcl:"notification,block"`
 }
@@ -40,7 +39,9 @@ type ChaosConfig struct {
 	Count int    `hcl:"count"`
 }
 
+/*
 type ScriptConfig struct {
 	Executor string `hcl:"executor"`
 	Source   string `hcl:"source"`
 }
+*/

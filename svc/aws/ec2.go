@@ -3,7 +3,6 @@ package aws
 import (
 	"context"
 	"log"
-	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -13,13 +12,11 @@ import (
 
 type chaosEC2fn func([]string, int, *ec2.Client)
 
-func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
+func ec2Fn(sess aws.Config, key string, value string, chaos string, number int, dry bool) {
 	svc := ec2.NewFromConfig(sess)
-	var key, value string
 
-	parts := strings.Split(tag, ":")
-	key = "tag:" + parts[0]
-	value = parts[1]
+	key = "tag:" + key
+
 	result, err := svc.DescribeInstances(context.TODO(), &ec2.DescribeInstancesInput{
 		Filters: []types.Filter{
 			{
@@ -48,7 +45,7 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 		return
 	}
 	if len(EC2instances) == 0 {
-		log.Println("Could not find any instance with: ", tag)
+		log.Println("Could not find any instance with: ", key, value)
 		return
 	}
 	if dry {
@@ -59,7 +56,7 @@ func ec2Fn(sess aws.Config, tag string, chaos string, number int, dry bool) {
 	if len(EC2instances) >= number {
 		log.Println("EC2 Chaos permitted...")
 	} else {
-		log.Println("Chaos not permitted", len(EC2instances), "instances found with", key, value, "Number of instances to destroy is:", number)
+		log.Println("Chaos not permitted", len(EC2instances), "instances found with value:", value, "Number of instances to destroy is:", number)
 		return
 	}
 

@@ -1,18 +1,20 @@
 app = "TestingApp"
 description = "this is a test" 
-function = "random"
 
 
-hypothesis {
-    name = "this is a test"
-    description = "My hypothesis is that the latency will not go down"
-    workers = 10
-    url = "http://localhost:8080"
-    report = "testing.txt"
-
+job "aws" "ec2" {
+    region = "us-west-2"
+    config {
+        tag = "Name:hola" 
+        chaos = "terminate"    
+        count = 4
+    }
 }
 
-job "do" "droplet" {
+job "script" "python3:script.py" {
+    region = "us-west-2"
+    namespace = "default"
+    project = "this is a test"
     config {
         tag = "hello" 
         chaos = "terminate"    

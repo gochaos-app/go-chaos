@@ -3,7 +3,6 @@ package aws
 import (
 	"context"
 	"log"
-	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
@@ -12,15 +11,13 @@ import (
 
 type chaosLambdafn func([]string, int, *lambda.Client)
 
-func lambdaFn(sess aws.Config, tag string, chaos string, number int, dry bool) {
+func lambdaFn(sess aws.Config, key string, value string, chaos string, number int, dry bool) {
 	svc := lambda.NewFromConfig(sess)
 	if number <= 0 {
 		log.Println("Will not destroy any Lambda")
 		return
 	}
-	parts := strings.Split(tag, ":")
-	key := parts[0]
-	value := parts[1]
+
 	result, err := svc.ListFunctions(context.TODO(), &lambda.ListFunctionsInput{})
 	if err != nil {
 		log.Panicln(err)
