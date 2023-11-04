@@ -2,22 +2,22 @@ app = "TestingApp"
 description = "this is a test" 
 
 
-job "aws" "ec2" {
-    region = "us-west-2"
+job "kubernetes" "pod" {
+    namespace = "nginx-dev"
     config {
-        tag = "Name:hola" 
+        tag = "app:nginx" 
         chaos = "terminate"    
-        count = 4
+        count = 1
     }
 }
 
-job "script" "python3:script.py" {
-    region = "us-west-2"
-    namespace = "default"
-    project = "this is a test"
-    config {
-        tag = "hello" 
-        chaos = "terminate"    
-        count = 3
-    }
-}
+#job "script" "python3:script.py" {
+#    region = "us-west-2"
+#    namespace = "default"
+#    project = "this is a test"
+#    config {
+#        tag = "hello" 
+#        chaos = "terminate"    
+#        count = 3
+#    }
+#}
