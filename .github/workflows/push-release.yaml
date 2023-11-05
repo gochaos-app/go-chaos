@@ -1,8 +1,9 @@
 name: "go-chaos release"
+
 on: 
   push:
     tags:
-      - "v*"
+      - v0.*
     
 jobs:
   build-release:
