@@ -18,14 +18,18 @@ jobs:
         uses: actions/checkout@v3
       - name: "Run builds release"
         run: |
-          GOOS=freebsd GOARCH=amd64 go build -ldflags="-s -w" -o bin/go-chaos-freebsd-amd64 .
-        	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o bin/go-chaos-linux-amd64 .
-	        GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o bin/go-chaos-linux-arm64 .
-	        GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o bin/go-chaos-darwin-amd64 .
-	        GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o bin/go-chaos-darwin-m1 .
+          GOOS=freebsd GOARCH=amd64 go build -ldflags="-s -w" -o go-chaos-freebsd-amd64 .
+        	GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o go-chaos-linux-amd64 .
+	        GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o go-chaos-linux-arm64 .
+	        GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o go-chaos-darwin-amd64 .
+	        GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o go-chaos-darwin-m1 .
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
-            bin/*
+            go-chaos-freebsd-amd64
+            go-chaos-linux-amd64
+            go-chaos-linux-arm64
+            go-chaos-darwin-amd64
+            go-chaos-darwin-m1
