@@ -1,4 +1,4 @@
-package cmd
+package config
 
 type GenConfig struct {
 	App           string        `hcl:"app"`
@@ -38,10 +38,3 @@ type ChaosConfig struct {
 	Chaos string `hcl:"chaos"`
 	Count int    `hcl:"count"`
 }
-
-/*
-type ScriptConfig struct {
-	Executor string `hcl:"executor"`
-	Source   string `hcl:"source"`
-}
-*/

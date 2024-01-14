@@ -3,6 +3,7 @@ package k8s
 import (
 	"log"
 
+	"github.com/gochaos-app/go-chaos/config"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
@@ -31,14 +32,14 @@ func K8sConfig() (*kubernetes.Clientset, error) {
 	return clientset, nil
 }
 
-func KubernetesChaos(namespace string, service string, tag string, chaos string, number int, dry bool) {
+func KubernetesChaos(cfg config.JobConfig, dry bool) {
 	k8sMap := map[string]k8sfn{
 		"pod":        podFn,
 		"deployment": deploymentFn,
 		"daemonSet":  daemonFn,
 	}
-	if _, servExists := k8sMap[service]; servExists {
-		k8sMap[service](namespace, tag, chaos, number, dry)
+	if _, servExists := k8sMap[cfg.Service]; servExists {
+		k8sMap[cfg.Service](cfg.Namespace, cfg.Chaos.Tag, cfg.Chaos.Chaos, cfg.Chaos.Count, dry)
 	} else {
 		log.Println("Service not found")
 		return

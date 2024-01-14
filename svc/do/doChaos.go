@@ -5,11 +5,12 @@ import (
 	"os"
 
 	"github.com/digitalocean/godo"
+	"github.com/gochaos-app/go-chaos/config"
 )
 
 type dofn func(*godo.Client, string, string, int, bool)
 
-func DigitalOceanChaos(region string, service string, tag string, chaos string, number int, dry bool) {
+func DigitalOceanChaos(cfg config.JobConfig, dry bool) {
 	// Check for environment variable
 	token := os.Getenv("DIGITALOCEAN_TOKEN")
 	if len(token) == 0 {
@@ -23,8 +24,8 @@ func DigitalOceanChaos(region string, service string, tag string, chaos string, 
 		"droplet":       DropletFn,
 		"load_balancer": LoadBalancerFn,
 	}
-	if _, servExists := doMap[service]; servExists {
-		doMap[service](client, tag, chaos, number, dry)
+	if _, servExists := doMap[cfg.Service]; servExists {
+		doMap[cfg.Service](client, cfg.Chaos.Tag, cfg.Chaos.Chaos, cfg.Chaos.Count, dry)
 	} else {
 		log.Println("Service not found")
 		return
