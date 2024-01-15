@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/gochaos-app/go-chaos/config"
 	"github.com/gochaos-app/go-chaos/notifications"
 	"github.com/gochaos-app/go-chaos/svc/aws"
 	"github.com/gochaos-app/go-chaos/svc/do"
@@ -13,60 +14,25 @@ import (
 	"github.com/gochaos-app/go-chaos/svc/scripts"
 )
 
-func switchService(job JobConfig, dry bool) {
-	switch job.Cloud {
-	case "aws":
-		aws.AmazonChaos(
-			job.Region,
-			job.Service,
-			job.Chaos.Tag,
-			job.Chaos.Chaos,
-			job.Chaos.Count,
-			dry)
-	case "do":
-		do.DigitalOceanChaos(
-			job.Region,
-			job.Service,
-			job.Chaos.Tag,
-			job.Chaos.Chaos,
-			job.Chaos.Count,
-			dry)
-	case "kubernetes":
-		k8s.KubernetesChaos(
-			job.Namespace,
-			job.Service,
-			job.Chaos.Tag,
-			job.Chaos.Chaos,
-			job.Chaos.Count,
-			dry)
-	case "gcp":
-		gcp.GoogleChaos(
-			job.Region,
-			job.Project,
-			job.Service,
-			job.Chaos.Tag,
-			job.Chaos.Chaos,
-			job.Chaos.Count,
-			dry)
-	case "script":
-		scripts.ExecuteScript(
-			job.Region,
-			job.Project,
-			job.Service,
-			job.Namespace,
-			job.Chaos.Tag,
-			job.Chaos.Chaos,
-			job.Chaos.Count,
-			dry)
+type cloudfn func(config.JobConfig, bool)
 
-	case "":
-		log.Println("I don't know what to do")
-	default:
-		log.Println("I don't understand the service to execute chaos on")
+func switchService(job config.JobConfig, dry bool) {
+	cloudMap := map[string]cloudfn{
+		"aws":        aws.AmazonChaos,
+		"do":         do.DigitalOceanChaos,
+		"kubernetes": k8s.KubernetesChaos,
+		"gcp":        gcp.GoogleChaos,
+		"script":     scripts.ExecuteScript,
+	}
+	if _, servExists := cloudMap[job.Cloud]; servExists {
+		cloudMap[job.Cloud](job, dry)
+	} else {
+		log.Println("Service not found")
+		return
 	}
 }
 
-func selectFunction(cfg *GenConfig) []JobConfig {
+func selectFunction(cfg *config.GenConfig) []config.JobConfig {
 	switch cfg.Function {
 	case "random":
 		return randomJobs(cfg.Job)
@@ -78,7 +44,7 @@ func selectFunction(cfg *GenConfig) []JobConfig {
 	return nil
 }
 
-func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
+func ExecuteChaos(cfg *config.GenConfig, dryFlag bool) error {
 	var wg sync.WaitGroup
 	done := make(chan struct{})
 	if cfg.Hypothesis != nil {
@@ -99,11 +65,6 @@ func ExecuteChaos(cfg *GenConfig, dryFlag bool) error {
 	// After executing chaos, if there's a script will be executed
 
 	if !dryFlag {
-		/*
-			if cfg.Script != nil {
-				scripts.ExecuteScript(cfg.Script.Source, cfg.Script.Executor)
-			}
-		*/
 		for i := 0; i < len(cfg.Notifications); i++ {
 			switch cfg.Notifications[i].Type {
 			case "gmail":

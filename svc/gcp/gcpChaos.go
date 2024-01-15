@@ -5,6 +5,7 @@ import (
 	"log"
 
 	resourcemanager "cloud.google.com/go/resourcemanager/apiv3"
+	"github.com/gochaos-app/go-chaos/config"
 	resourcemanagerpb "google.golang.org/genproto/googleapis/cloud/resourcemanager/v3"
 
 	"google.golang.org/api/iterator"
@@ -12,7 +13,7 @@ import (
 
 type gcpfn func(string, string, string, string, int, bool)
 
-func GoogleChaos(region string, project string, service string, tag string, chaos string, number int, dry bool) {
+func GoogleChaos(cfg config.JobConfig, dry bool) {
 	//search for project, if it doesn't exists return and print and error
 	ctx := context.Background()
 	c, err := resourcemanager.NewProjectsClient(ctx)
@@ -32,7 +33,7 @@ func GoogleChaos(region string, project string, service string, tag string, chao
 			log.Println(err)
 		}
 
-		if resp.DisplayName == project {
+		if resp.DisplayName == cfg.Project {
 			log.Println("GCP Project exists")
 			break
 		} else {
@@ -45,8 +46,8 @@ func GoogleChaos(region string, project string, service string, tag string, chao
 		"vm": instanceFn,
 	}
 
-	if _, servExists := gcpMap[service]; servExists {
-		gcpMap[service](project, region, tag, chaos, number, dry)
+	if _, servExists := gcpMap[cfg.Service]; servExists {
+		gcpMap[cfg.Service](cfg.Project, cfg.Region, cfg.Chaos.Tag, cfg.Chaos.Chaos, cfg.Chaos.Count, dry)
 	} else {
 		log.Println("Service not found")
 		return

@@ -6,26 +6,28 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/gochaos-app/go-chaos/config"
 )
 
-func ExecuteScript(region string, project string, script string, namespace string, tag string, chaos string, number int, dry bool) {
-	if strings.Count(script, ":") != 1 {
+func ExecuteScript(cfg config.JobConfig, dry bool) {
+	if strings.Count(cfg.Service, ":") != 1 {
 		log.Println("script must be in the format 'execution binary: path to script' ")
 		return
 	}
-	parts := strings.Split(script, ":")
+	parts := strings.Split(cfg.Service, ":")
 	executor := parts[0]
-	script = parts[1]
+	script := parts[1]
 	if dry {
 		log.Println("Dry run, not executing script")
 	} else {
 		log.Println("Executing script", script)
-		os.Setenv("REGION", region)
-		os.Setenv("PROJECT", project)
-		os.Setenv("NAMESPACE", namespace)
-		os.Setenv("TAG", tag)
-		os.Setenv("CHAOS", chaos)
-		os.Setenv("NUMBER", fmt.Sprintf("%d", number))
+		os.Setenv("REGION", cfg.Region)
+		os.Setenv("PROJECT", cfg.Project)
+		os.Setenv("NAMESPACE", cfg.Namespace)
+		os.Setenv("TAG", cfg.Chaos.Tag)
+		os.Setenv("CHAOS", cfg.Chaos.Chaos)
+		os.Setenv("NUMBER", fmt.Sprintf("%d", cfg.Chaos.Count))
 
 		cmd, err := exec.Command(executor, script).Output()
 

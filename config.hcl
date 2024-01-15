@@ -2,10 +2,11 @@ app = "TestingApp"
 description = "this is a test" 
 
 
-job "kubernetes" "pod" {
-    namespace = "nginx-dev"
+job "script" "python3:script.py" {
+    region = "us-west-2"
+    namespace = "default"
     config {
-        tag = "app:nginx" 
+        tag = "hello" 
         chaos = "terminate"    
         count = 1
     }
